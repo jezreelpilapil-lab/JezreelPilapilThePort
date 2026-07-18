@@ -37,10 +37,16 @@ function buildNav(meta) {
         <nav class="hidden md:flex gap-6 text-sm font-medium">
           ${links.map(l => `<a href="#${l.toLowerCase()}" class="hover:text-brand transition-colors">${l}</a>`).join('')}
         </nav>
-        <a href="${meta.resume}" download
-           class="text-xs bg-brand text-dark font-semibold px-4 py-2 rounded-full hover:brightness-110 transition">
-          Download Resume
-        </a>
+        <div class="flex gap-2">
+          <a href="${meta.resume}" download
+             class="text-xs bg-brand text-dark font-semibold px-3 py-2 rounded-full hover:brightness-110 transition">
+            Full Resume
+          </a>
+          <a href="${meta.resume_short}" download
+             class="text-xs border border-brand text-brand font-semibold px-3 py-2 rounded-full hover:bg-brand hover:text-dark transition">
+            Short Resume
+          </a>
+        </div>
       </div>
     </header>`;
 }
@@ -60,7 +66,7 @@ function buildHero(meta) {
           <span class="text-slate-600">|</span>
           <span>${meta.phone}</span>
         </div>
-        <div class="flex justify-center gap-4">
+        <div class="flex flex-wrap justify-center gap-3">
           <a href="#contact"
              class="bg-brand text-dark font-semibold px-6 py-3 rounded-full hover:brightness-110 transition">
             Hire Me
@@ -68,6 +74,14 @@ function buildHero(meta) {
           <a href="#projects"
              class="border border-brand text-brand px-6 py-3 rounded-full hover:bg-brand hover:text-dark transition">
             View Projects
+          </a>
+          <a href="${meta.resume}" download
+             class="bg-slate-700 text-white font-semibold px-6 py-3 rounded-full hover:bg-slate-600 transition">
+            Download Full Resume
+          </a>
+          <a href="${meta.resume_short}" download
+             class="border border-slate-600 text-slate-300 font-semibold px-6 py-3 rounded-full hover:bg-slate-800 transition">
+            Download Short Resume
           </a>
         </div>
         <div class="flex justify-center gap-5 mt-8">
