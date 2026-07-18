@@ -14,7 +14,7 @@
     "headline": "20+ Years of Technical Excellence",
     "paragraphs": [
       "I am a Technical Support and Data Operations professional with over 20 years of hands-on experience spanning corporate BPO environments — including Verizon, Comcast, and Amazon programs — as well as independent software and hardware consulting.",
-      "I have progressed through roles in frontline customer operations, helpdesk analysis, revenue assurance, and quality coaching, consistently delivering process improvements and technical solutions in high-volume, SLA-driven environments.",
+      "I have progressed through roles in frontline customer operations, helpdesk analysis, revenue assurance, and quality analysis, consistently delivering process improvements and technical solutions in high-volume, SLA-driven environments.",
       "Beyond corporate work, I have been a self-employed freelance developer since 2003 — building Android utility apps, full-stack web projects, and providing component-level hardware repair services to academic and small-business clients."
     ]
   },
@@ -37,7 +37,7 @@
     {
       "category": "Operations & Quality",
       "icon": "chart",
-      "items": ["Escalation handling", "Revenue variance analysis", "Quality coaching & mentoring", "Retail store support", "SLA management", "Process improvement"]
+      "items": ["Escalation handling", "Revenue variance analysis", "Quality analysis & mentoring", "Retail store support", "SLA management", "Process improvement"]
     }
   ],
   "experience": [
@@ -128,10 +128,10 @@
       "period": "Aug 2013 – Feb 2020",
       "roles": [
         {
-          "title": "Customer Service Associate & Quality Coach",
+          "title": "Customer Service Associate & Quality Analyst",
           "period": "Aug 2013 – Feb 2020",
           "bullets": [
-            "Promoted to Quality Coach to audit service delivery across emails, voice interactions, and customer satisfaction surveys.",
+            "Promoted to Quality Analyst to audit service delivery across emails, voice interactions, and customer satisfaction surveys.",
             "Delivered structured coaching sessions and actionable feedback to frontline teams of agents, improving site quality scores."
           ]
         }
