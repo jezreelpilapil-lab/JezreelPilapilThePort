@@ -39,7 +39,7 @@ function buildNav(meta) {
         </nav>
         <a href="${meta.resume}" download
            class="text-xs bg-brand text-dark font-semibold px-4 py-2 rounded-full hover:brightness-110 transition">
-          Download CV
+          Download Resume
         </a>
       </div>
     </header>`;
