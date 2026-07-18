@@ -1,20 +1,21 @@
 {
   "meta": {
     "name": "Jezreel Aldave Pilapil",
-    "tagline": "IT Technical Support · BPO Operations · Software & Hardware Engineer",
+    "tagline": "IT Technical Support · Quality Assurance · BPO Operations · Software & Hardware Engineer",
     "location": "Malolos City, Bulacan, Philippines",
     "phone": "+63 992.783.0102",
     "email": "jezreel.pilapil@gmail.com",
     "linkedin": "https://www.linkedin.com/in/jezreel-pilapil-711a32222",
-    "github": "https://github.com/jezreelpilapil",
+    "github": "https://github.com/jezreelpilapil-lab",
+    "portfolio": "https://jezreelpilapil-lab.github.io/JezreelPilapilThePort",
     "resume": "Jezreel Pilapil Resume.pdf",
     "avatar": "avatar.jpg"
   },
   "about": {
     "headline": "20+ Years of Technical Excellence",
     "paragraphs": [
-      "I am a Technical Support and Data Operations professional with over 20 years of hands-on experience spanning corporate BPO environments — including Verizon, Comcast, and Amazon programs — as well as independent software and hardware consulting.",
-      "I have progressed through roles in frontline customer operations, helpdesk analysis, revenue assurance, and quality analysis, consistently delivering process improvements and technical solutions in high-volume, SLA-driven environments.",
+      "I am a Technical Support, Quality Assurance, and Data Operations professional with over 20 years of hands-on experience spanning corporate BPO environments — including Verizon, Comcast, and Amazon programs — as well as independent software and hardware consulting.",
+      "I have progressed through roles in frontline customer operations, helpdesk analysis, revenue assurance, and quality analysis, consistently delivering process improvements, compliance auditing, and technical solutions in high-volume, SLA-driven environments.",
       "Beyond corporate work, I have been a self-employed freelance developer since 2003 — building Android utility apps, full-stack web projects, and providing component-level hardware repair services to academic and small-business clients."
     ]
   },
@@ -22,7 +23,7 @@
     {
       "category": "Languages & Web",
       "icon": "code",
-      "items": ["Java", "Python", "SQL", "HTML5", "CSS3", "JavaScript", "PHP", "Visual Basic", "Turbo Pascal"]
+      "items": ["Java", "Python", "SQL", "HTML5", "CSS3", "JavaScript", "PHP", "COBOL", "Visual Basic", "Turbo Pascal"]
     },
     {
       "category": "Tools & Platforms",
@@ -30,14 +31,14 @@
       "items": ["ServiceNow", "Android Studio", "Jira", "Git", "Google Workspace", "Microsoft Office"]
     },
     {
-      "category": "Hardware & Networking",
+      "category": "Legacy Systems & Hardware",
       "icon": "cpu",
-      "items": ["PC / Laptop / Tablet / Smartphone diagnostics & repair", "Fiber Optic termination", "Home router configuration (Linksys, Netgear, D-Link)", "AutoCAD", "Blender"]
+      "items": ["Lotus 1-2-3", "WordStar", "WordPerfect", "PC / Laptop / Tablet / Smartphone diagnostics & repair", "Fiber Optic termination", "Home router configuration (Linksys, Netgear, D-Link)", "AutoCAD", "Blender"]
     },
     {
       "category": "Operations & Quality",
       "icon": "chart",
-      "items": ["Escalation handling", "Revenue variance analysis", "Quality analysis & mentoring", "Retail store support", "SLA management", "Process improvement"]
+      "items": ["Quality Auditing & Analytics", "Escalation handling", "Revenue variance analysis", "Coaching & mentoring", "Retail store support", "SLA management", "Process improvement", "Cross-functional collaboration", "Data analysis"]
     }
   ],
   "experience": [
@@ -45,11 +46,11 @@
       "company": "Mind Dragon Philippines OPC",
       "formerly": "formerly GoWireless / Victra Philippines",
       "location": "Malolos City, Bulacan, Philippines",
-      "period": "Jan 2023 – Jul 2026",
+      "period": "Jan. 30, 2023 – Jul. 3, 2026",
       "roles": [
         {
           "title": "Contact Center Representative – VRSS/VZE",
-          "period": "Feb 2026 – Jul 2026",
+          "period": "Feb. 7, 2026 – Jul. 3, 2026 (VRSS: Feb. 7 – Apr. 23, 2026 / VZE: Apr. 24 – Jul. 3, 2026)",
           "bullets": [
             "Coordinated store schedules and checked in customers for appointments based on real-time Verizon retail store availability.",
             "Drove customer lifetime value by cross-selling and promoting exclusive Vivint smart home solutions post-interaction.",
@@ -59,7 +60,7 @@
         },
         {
           "title": "Helpdesk Analyst 2 (Reliever)",
-          "period": "Sep 2025 – Feb 2026",
+          "period": "Sep. 8, 2025 – Feb. 6, 2026",
           "bullets": [
             "Administered POS operations and delivered technical process support to floor sales staff, resolving system incidents via ServiceNow.",
             "Managed incident logs and technical support requests from internal retail operations using ServiceNow.",
@@ -68,7 +69,7 @@
         },
         {
           "title": "Contact Center Representative",
-          "period": "Apr 2025 – Sep 2025",
+          "period": "Apr. 25, 2025 – Sep. 8, 2025",
           "bullets": [
             "Managed front-end appointment tracking and retail support queries, maintaining baseline SLAs for customer store routing.",
             "Managed proactive escalations, ensuring store location and promotion accuracy to minimize in-store friction."
@@ -76,7 +77,7 @@
         },
         {
           "title": "Revenue Assurance – Associate Operations Analyst",
-          "period": "Jun 2024 – Apr 2025",
+          "period": "Jun. 17, 2024 – Apr. 25, 2025",
           "bullets": [
             "Synthesized raw statistical data from system databases to monitor daily sales and month-to-date (MTD) revenue performance.",
             "Generated and dispatched business-critical intraday and end-of-day performance summaries (R2B emails) to stakeholders to call out revenue variances and trends."
@@ -84,7 +85,7 @@
         },
         {
           "title": "Contact Center Representative",
-          "period": "Jan 2023 – Jun 2024",
+          "period": "Jan. 30, 2023 – Jun. 17, 2024",
           "bullets": [
             "Handled core campaign support and early qualification pre-screening metrics for specialty customer offerings (e.g., EARGO)."
           ]
@@ -94,11 +95,11 @@
     {
       "company": "Automatic Data Processing, Inc. (ADP®)",
       "location": "Ayala Center, Makati City",
-      "period": "Nov 2021 – Dec 2022",
+      "period": "Nov. 8, 2021 – Dec. 23, 2022",
       "roles": [
         {
           "title": "Client Support Specialist – CoSo Profile Management",
-          "period": "Nov 2021 – Dec 2022",
+          "period": "Nov. 8, 2021 – Dec. 23, 2022",
           "bullets": [
             "Researched and resolved complex federal, state, and local agency tax notices (e.g., IRS) utilizing structured compliance checklists.",
             "Audited bank runs for FSDD rejections, investigated USMM mystery debits, and processed financial invoice modifications and offset corrections."
@@ -109,11 +110,11 @@
     {
       "company": "VXI Global Solutions",
       "location": "Quezon City, Philippines",
-      "period": "Feb 2020 – Nov 2021",
+      "period": "Feb. 20, 2020 – Nov. 29, 2021",
       "roles": [
         {
           "title": "Account Associate – Comcast Central Xfinity",
-          "period": "Feb 2020 – Nov 2021",
+          "period": "Feb. 20, 2020 – Nov. 29, 2021",
           "bullets": [
             "Provisioned and troubleshot Comcast Triple-Play services (Voice, Internet, Cable TV) using ITG, maintaining first-call resolution rates.",
             "Enforced security and privacy compliance protocols including CPNI guidelines and fraud/abuse assurance procedures."
@@ -125,14 +126,16 @@
       "company": "Alorica Teleservices Inc.",
       "formerly": "formerly NCO / EGS",
       "location": "Quezon City, Philippines",
-      "period": "Aug 2013 – Feb 2020",
+      "period": "Aug. 2, 2013 – Feb. 15, 2020",
       "roles": [
         {
           "title": "Customer Service Associate & Quality Analyst",
-          "period": "Aug 2013 – Feb 2020",
+          "period": "Aug. 2, 2013 – Feb. 15, 2020",
           "bullets": [
-            "Promoted to Quality Analyst to audit service delivery across emails, voice interactions, and customer satisfaction surveys.",
-            "Delivered structured coaching sessions and actionable feedback to frontline teams of agents, improving site quality scores."
+            "Managed quality evaluation, transaction monitoring, and compliance auditing for multiple Amazon Lines of Business (LOB), including Amazon.co.uk, Amazon.com, Amazon Email, Amazon Voice, and Kindle Tech.",
+            "Audited service delivery across emails, voice interactions, and customer satisfaction (CSAT) surveys to ensure compliance with strict Amazon SLAs.",
+            "Delivered structured coaching sessions and actionable feedback to frontline teams of agents, improving site quality scores and customer experience metrics.",
+            "Recognized as a top-performing agent for the Amazon US Email program prior to moving into the Quality Analyst role."
           ]
         }
       ]
@@ -140,11 +143,11 @@
     {
       "company": "Stream Global Services Inc.",
       "location": "Mandaluyong City, Philippines",
-      "period": "Jan 2012 – Nov 2012",
+      "period": "Jan. 18, 2012 – Nov. 23, 2012",
       "roles": [
         {
           "title": "Technical Support Representative (L1)",
-          "period": "Jan 2012 – Nov 2012",
+          "period": "Jan. 18, 2012 – Nov. 23, 2012",
           "bullets": [
             "Handled account maintenance, billing reversals, RF/speed troubleshooting, and home router configurations (Linksys, Netgear, D-Link)."
           ]
@@ -154,11 +157,11 @@
     {
       "company": "Delica Database Management",
       "location": "Valenzuela City, Philippines",
-      "period": "Apr 2007 – Dec 2007",
+      "period": "Apr. 16, 2007 – Dec. 15, 2007",
       "roles": [
         {
           "title": "Data Analyst",
-          "period": "Apr 2007 – Dec 2007",
+          "period": "Apr. 16, 2007 – Dec. 15, 2007",
           "bullets": [
             "Reviewed and corrected OCR-captured documents for accuracy, then migrated validated text data to XML elements."
           ]
@@ -214,6 +217,14 @@
       "description": "Designed, built, and debugged full-stack web applications and custom tools for academic institutions and small-business clients since 2003 — covering front-end, back-end, and database layers.",
       "icon": "web",
       "repo": ""
+    }
+  ],
+  "awards": [
+    {
+      "name": "US Email Rockstar Award",
+      "issuer": "Alorica",
+      "date": "August 2017",
+      "description": "Awarded at the Agent Level for outstanding commitment, customer obsession, and achieving a 101.89% Offer Rate for the Amazon US Email line of business."
     }
   ],
   "certifications": [

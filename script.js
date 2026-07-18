@@ -29,7 +29,7 @@ const sectionTitle = (text) =>
 
 // ─── Navbar builder ──────────────────────────────────────────────────────────
 function buildNav(meta) {
-  const links = ['About', 'Skills', 'Experience', 'Projects', 'Certifications', 'Contact'];
+  const links = ['About', 'Skills', 'Experience', 'Projects', 'Awards', 'Certifications', 'Contact'];
   document.getElementById('navbar').innerHTML = `
     <header class="fixed top-0 inset-x-0 z-50 bg-dark/90 backdrop-blur border-b border-slate-800">
       <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -222,7 +222,21 @@ function buildContact(contact, meta) {
     </div>`);
 }
 
-// ─── Footer builder ──────────────────────────────────────────────────────────
+// ─── Awards builder ──────────────────────────────────────────────────────────
+function buildAwards(awards) {
+  const items = awards.map(a => `
+    <div class="bg-card border border-yellow-500/30 rounded-xl p-5 flex gap-4 items-start">
+      <div class="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center flex-shrink-0 text-yellow-400 text-xl">🏆</div>
+      <div>
+        <p class="text-white font-semibold">${a.name}</p>
+        <p class="text-xs text-brand mb-2">${a.issuer} · ${a.date}</p>
+        <p class="text-slate-400 text-sm">${a.description}</p>
+      </div>
+    </div>`).join('');
+  return section('awards', `${sectionTitle('Awards & Recognition')}<div class="grid sm:grid-cols-2 gap-4">${items}</div>`);
+}
+
+
 function buildFooter(meta) {
   document.getElementById('footer').innerHTML = `
     <div class="border-t border-slate-800 py-8 px-4 text-center text-sm text-muted">
@@ -287,6 +301,7 @@ async function init() {
       buildSkills(data.skills),
       buildExperience(data.experience),
       buildProjects(data.projects),
+      buildAwards(data.awards),
       buildCertifications(data.certifications),
       buildContact(data.contact, data.meta)
     ].join('');
