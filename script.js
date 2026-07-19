@@ -33,7 +33,7 @@ function buildNav(meta) {
   document.getElementById('navbar').innerHTML = `
     <header class="fixed top-0 inset-x-0 z-50 bg-dark/90 backdrop-blur border-b border-slate-800">
       <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-        <span class="text-brand font-bold tracking-wide text-lg">JAP</span>
+        <img src="logo.png" alt="JAP Logo" class="w-8 h-8 rounded-full object-cover">
         <nav class="hidden md:flex gap-6 text-sm font-medium">
           ${links.map(l => `<a href="#${l.toLowerCase()}" class="hover:text-brand transition-colors">${l}</a>`).join('')}
         </nav>
@@ -56,6 +56,7 @@ function buildHero(meta) {
   return `
     <section id="hero" class="min-h-screen flex items-center justify-center px-4 pt-16">
       <div class="max-w-3xl text-center">
+        <img src="logo.png" alt="JAP Logo" class="w-32 h-32 mx-auto mb-6 rounded-full object-cover">
         <p class="text-brand text-sm font-semibold tracking-widest uppercase mb-4">Portfolio</p>
         <h1 class="text-5xl md:text-6xl font-bold text-white leading-tight mb-4">${meta.name}</h1>
         <p class="text-xl text-muted mb-8">${meta.tagline}</p>
