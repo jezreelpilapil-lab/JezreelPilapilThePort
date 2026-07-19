@@ -15,7 +15,7 @@
   "about": {
     "headline": "20+ Years of Technical Excellence",
     "paragraphs": [
-      "I am a Technical Support, Quality Assurance, and Data Operations professional with over 20 years of hands-on experience spanning corporate BPO environments — including Verizon, Comcast, and Amazon programs — as well as independent software and hardware consulting.",
+      "Technical Support, Quality Assurance, and Data Operations professional with 20+ years of experience spanning corporate BPO environments (Verizon, Comcast, Amazon) and independent software/hardware consulting. Skilled in ServiceNow, Salesforce, custom Android development (Java), and full-stack web technologies. Consistently delivers process improvements, compliance auditing, and technical solutions in high-volume, SLA-driven environments.",
       "I have progressed through roles in frontline customer operations, helpdesk analysis, revenue assurance, and quality analysis, consistently delivering process improvements, compliance auditing, and technical solutions in high-volume, SLA-driven environments.",
       "Beyond corporate work, I have been a self-employed freelance developer since 2003 — building Android utility apps, full-stack web projects, and providing component-level hardware repair services to academic and small-business clients."
     ]
@@ -29,7 +29,7 @@
     {
       "category": "Tools & Platforms",
       "icon": "wrench",
-      "items": ["ServiceNow", "Android Studio", "Jira", "Git", "Google Workspace", "Microsoft Office"]
+      "items": ["ServiceNow", "Salesforce", "Android Studio", "Jira", "Git", "Google Workspace", "Microsoft Office"]
     },
     {
       "category": "Legacy Systems & Hardware",
@@ -151,7 +151,7 @@
           "title": "Technical Support Representative (L1)",
           "period": "Jan. 18, 2012 – Nov. 23, 2012",
           "bullets": [
-            "Handled account maintenance, billing reversals, RF/speed troubleshooting, and home router configurations (Linksys, Netgear, D-Link)."
+            "Handled billing reversals, RF/speed troubleshooting, and home router configurations (Linksys, Netgear, D-Link) utilizing Salesforce CRM."
           ]
         }
       ]
