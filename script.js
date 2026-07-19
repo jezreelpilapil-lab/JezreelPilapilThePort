@@ -335,6 +335,9 @@ function buildFooter(meta) {
               ${reactionButtonsHTML}
             </div>
           </div>
+          <button id="resetBtn" class="text-xs px-3 py-1 rounded-full border border-slate-700 hover:border-red-500 hover:text-red-500 transition-colors">
+            Reset
+          </button>
         </div>
       </div>
     </div>`;
@@ -343,32 +346,49 @@ function buildFooter(meta) {
   const reactionSummary = document.querySelector('.reaction-summary');
   const reactionMenu = document.querySelector('.reaction-menu');
   const reactionBtns = document.querySelectorAll('.reaction-btn');
+  const resetBtn = document.getElementById('resetBtn');
 
-  // Show menu on hover
-  reactionSummary.addEventListener('mouseenter', () => {
-    reactionMenu.classList.remove('hidden');
+  // Show menu on click (keep open until click outside or select)
+  let menuOpen = false;
+  reactionSummary.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (menuOpen) {
+      if (currentReaction) {
+        handleReaction(null);
+      }
+      reactionMenu.classList.add('hidden');
+      menuOpen = false;
+    } else {
+      reactionMenu.classList.remove('hidden');
+      menuOpen = true;
+    }
   });
-  reactionSummary.addEventListener('mouseleave', () => {
-    reactionMenu.classList.add('hidden');
-  });
-  reactionMenu.addEventListener('mouseenter', () => {
-    reactionMenu.classList.remove('hidden');
-  });
-  reactionMenu.addEventListener('mouseleave', () => {
-    reactionMenu.classList.add('hidden');
+
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!reactionMenu.contains(e.target) && !reactionSummary.contains(e.target)) {
+      reactionMenu.classList.add('hidden');
+      menuOpen = false;
+    }
   });
 
   // Handle reaction clicks
   reactionBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
       handleReaction(btn.dataset.reaction);
     });
   });
 
-  // Handle click on summary to remove reaction
-  reactionSummary.addEventListener('click', () => {
-    if (currentReaction) {
-      handleReaction(null);
+  // Handle reset button
+  resetBtn.addEventListener('click', () => {
+    if (confirm('Are you sure you want to reset all reaction counters?')) {
+      const reactionTypes = ['like', 'heart', 'laugh', 'surprise', 'sad', 'angry', 'dislike'];
+      reactionTypes.forEach(type => {
+        localStorage.removeItem(`${type}Count`);
+      });
+      localStorage.removeItem('currentReaction');
+      location.reload();
     }
   });
 }
