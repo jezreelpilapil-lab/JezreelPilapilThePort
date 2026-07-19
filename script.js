@@ -377,6 +377,45 @@ function buildFooter(meta) {
   });
 }
 
+function buildHiddenUI(uiConfig) {
+  const container = document.createElement('div');
+  
+  // Hidden Icon
+  const hiddenIcon = document.createElement('div');
+  hiddenIcon.id = uiConfig.hidden_icon.id;
+  hiddenIcon.className = uiConfig.hidden_icon.class;
+  hiddenIcon.textContent = uiConfig.hidden_icon.content;
+  container.appendChild(hiddenIcon);
+  
+  // Command Line
+  const commandLine = document.createElement('div');
+  commandLine.id = uiConfig.command_line.id;
+  commandLine.className = uiConfig.command_line.class;
+  
+  const prompt = document.createElement('span');
+  prompt.className = 'text-brand font-semibold';
+  prompt.textContent = '$';
+  commandLine.appendChild(prompt);
+  
+  const commandInput = document.createElement('input');
+  commandInput.type = 'text';
+  commandInput.id = uiConfig.command_line.input_id;
+  commandInput.className = uiConfig.command_line.input_class;
+  commandInput.placeholder = uiConfig.command_line.input_placeholder;
+  commandLine.appendChild(commandInput);
+  
+  container.appendChild(commandLine);
+  
+  // Error Bubble
+  const errorBubble = document.createElement('div');
+  errorBubble.id = uiConfig.error_bubble.id;
+  errorBubble.className = uiConfig.error_bubble.class;
+  errorBubble.textContent = uiConfig.error_bubble.message;
+  container.appendChild(errorBubble);
+  
+  document.body.appendChild(container);
+}
+
 // --- New Command Line Logic ---
 function initCommandLine() {
   const hiddenIcon = document.getElementById('hiddenIcon');
@@ -536,6 +575,7 @@ async function init() {
     ].join('');
 
     buildFooter(data.meta);
+    buildHiddenUI(data.hidden_ui);
     initScrollReveal();
     initContactForm();
     initCommandLine();
