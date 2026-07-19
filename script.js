@@ -253,9 +253,65 @@ function buildAwards(awards) {
 
 
 function buildFooter(meta) {
-  const hasVoted = localStorage.getItem('hasVoted');
-  const likes = parseInt(localStorage.getItem('likeCount') || '0');
-  const dislikes = parseInt(localStorage.getItem('dislikeCount') || '0');
+  // Initialize reaction counts
+  const reactionTypes = ['like', 'heart', 'laugh', 'surprise', 'sad', 'angry', 'dislike'];
+  const reactionCounts = {};
+  reactionTypes.forEach(type => {
+    reactionCounts[type] = parseInt(localStorage.getItem(`${type}Count`) || '0');
+  });
+  const currentReaction = localStorage.getItem('currentReaction');
+
+  // Build reaction buttons HTML
+  const reactionButtonsHTML = reactionTypes.map(type => {
+    const emoji = {
+      like: '👍',
+      heart: '❤️',
+      laugh: '😂',
+      surprise: '😮',
+      sad: '😢',
+      angry: '😠',
+      dislike: '👎'
+    }[type];
+    const color = {
+      like: 'text-blue-500 border-blue-500',
+      heart: 'text-red-500 border-red-500',
+      laugh: 'text-yellow-500 border-yellow-500',
+      surprise: 'text-yellow-400 border-yellow-400',
+      sad: 'text-blue-400 border-blue-400',
+      angry: 'text-orange-500 border-orange-500',
+      dislike: 'text-red-600 border-red-600'
+    }[type];
+    const isActive = currentReaction === type;
+    
+    return `
+      <button 
+        class="reaction-btn px-2 py-1 rounded-full border border-slate-700 hover:border-brand transition-colors text-lg ${isActive ? color : ''}"
+        data-reaction="${type}"
+      >
+        ${emoji}
+      </button>
+    `;
+  }).join('');
+
+  // Build total reactions count display
+  const totalReactions = reactionTypes.reduce((sum, type) => sum + reactionCounts[type], 0);
+  const topReactions = reactionTypes
+    .filter(type => reactionCounts[type] > 0)
+    .sort((a, b) => reactionCounts[b] - reactionCounts[a])
+    .slice(0, 3);
+  
+  const topReactionsHTML = topReactions.map(type => {
+    const emoji = {
+      like: '👍',
+      heart: '❤️',
+      laugh: '😂',
+      surprise: '😮',
+      sad: '😢',
+      angry: '😠',
+      dislike: '👎'
+    }[type];
+    return `<span class="text-lg">${emoji}</span>`;
+  }).join('');
 
   document.getElementById('footer').innerHTML = `
     <div class="border-t border-slate-800 py-8 px-4">
@@ -268,43 +324,80 @@ function buildFooter(meta) {
           <a href="https://www.visitorbadge.io/" target="_blank" rel="noopener">
             <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fjezreelpilapil-lab.github.io%2FJezreelPilapilThePort%2F&countColor=%2338bdf8" alt="Visitor Counter">
           </a>
-          <div class="flex items-center gap-4">
-            <button id="likeBtn" class="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 hover:border-brand transition-colors ${hasVoted === 'like' ? 'border-green-500 text-green-500' : ''}" ${hasVoted ? 'disabled' : ''}>
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.057L8 20V10.5A1.5 1.5 0 019.5 9H11l2-6h2l1 6z" />
-              </svg>
-              <span id="likeCount">${likes}</span>
-            </button>
-            <button id="dislikeBtn" class="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 hover:border-brand transition-colors ${hasVoted === 'dislike' ? 'border-red-500 text-red-500' : ''}" ${hasVoted ? 'disabled' : ''}>
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.737 3h4.017c.163 0 .326.02.485.057L16 4v9.5A1.5 1.5 0 0114.5 15H13l-2 6H9l-1-6z" />
-              </svg>
-              <span id="dislikeCount">${dislikes}</span>
-            </button>
+          <div class="relative">
+            <div class="reaction-summary flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 hover:border-brand transition-colors cursor-pointer">
+              <div class="flex -space-x-1">
+                ${topReactionsHTML || '<span class="text-lg">👍</span>'}
+              </div>
+              <span class="text-sm text-slate-400">${totalReactions}</span>
+            </div>
+            <div class="reaction-menu absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden flex gap-1 bg-slate-800 rounded-full p-1 shadow-lg border border-slate-700">
+              ${reactionButtonsHTML}
+            </div>
           </div>
         </div>
       </div>
     </div>`;
 
-  // Add event listeners for like/dislike
-  document.getElementById('likeBtn').addEventListener('click', () => handleVote('like'));
-  document.getElementById('dislikeBtn').addEventListener('click', () => handleVote('dislike'));
+  // Add event listeners
+  const reactionSummary = document.querySelector('.reaction-summary');
+  const reactionMenu = document.querySelector('.reaction-menu');
+  const reactionBtns = document.querySelectorAll('.reaction-btn');
+
+  // Show menu on hover
+  reactionSummary.addEventListener('mouseenter', () => {
+    reactionMenu.classList.remove('hidden');
+  });
+  reactionSummary.addEventListener('mouseleave', () => {
+    reactionMenu.classList.add('hidden');
+  });
+  reactionMenu.addEventListener('mouseenter', () => {
+    reactionMenu.classList.remove('hidden');
+  });
+  reactionMenu.addEventListener('mouseleave', () => {
+    reactionMenu.classList.add('hidden');
+  });
+
+  // Handle reaction clicks
+  reactionBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      handleReaction(btn.dataset.reaction);
+    });
+  });
+
+  // Handle click on summary to remove reaction
+  reactionSummary.addEventListener('click', () => {
+    if (currentReaction) {
+      handleReaction(null);
+    }
+  });
 }
 
-function handleVote(type) {
-  if (localStorage.getItem('hasVoted')) return;
-  
-  const currentCount = parseInt(localStorage.getItem(`${type}Count`) || '0');
-  localStorage.setItem(`${type}Count`, currentCount + 1);
-  localStorage.setItem('hasVoted', type);
-  
-  document.getElementById(`${type}Count`).textContent = currentCount + 1;
-  document.getElementById('likeBtn').disabled = true;
-  document.getElementById('dislikeBtn').disabled = true;
-  document.getElementById('likeBtn').classList.toggle('border-green-500', type === 'like');
-  document.getElementById('likeBtn').classList.toggle('text-green-500', type === 'like');
-  document.getElementById('dislikeBtn').classList.toggle('border-red-500', type === 'dislike');
-  document.getElementById('dislikeBtn').classList.toggle('text-red-500', type === 'dislike');
+function handleReaction(newReaction) {
+  const reactionTypes = ['like', 'heart', 'laugh', 'surprise', 'sad', 'angry', 'dislike'];
+  const oldReaction = localStorage.getItem('currentReaction');
+
+  // Remove old reaction if exists
+  if (oldReaction) {
+    const oldCount = parseInt(localStorage.getItem(`${oldReaction}Count`) || '0');
+    if (oldCount > 0) {
+      localStorage.setItem(`${oldReaction}Count`, oldCount - 1);
+    }
+  }
+
+  // Add new reaction if not null
+  if (newReaction) {
+    const newCount = parseInt(localStorage.getItem(`${newReaction}Count`) || '0');
+    localStorage.setItem(`${newReaction}Count`, newCount + 1);
+    localStorage.setItem('currentReaction', newReaction);
+  } else {
+    localStorage.removeItem('currentReaction');
+  }
+
+  // Re-render footer to update counts
+  // We need to re-call buildFooter, but first we need the meta data
+  // Since we don't have it here, let's just reload the page for simplicity
+  location.reload();
 }
 
 // ─── Scroll animation (Intersection Observer) ────────────────────────────────
