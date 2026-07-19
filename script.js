@@ -429,7 +429,7 @@ function initCommandLine() {
     commandInput.focus();
   });
 
-  commandInput.addEventListener('keypress', (e) => {
+  commandInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       const command = commandInput.value.trim().toLowerCase();
       
