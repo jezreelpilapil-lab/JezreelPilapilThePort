@@ -335,9 +335,6 @@ function buildFooter(meta) {
               ${reactionButtonsHTML}
             </div>
           </div>
-          <button id="resetBtn" class="text-xs px-3 py-1 rounded-full border border-slate-700 hover:border-red-500 hover:text-red-500 transition-colors">
-            Reset
-          </button>
         </div>
       </div>
     </div>`;
@@ -346,7 +343,6 @@ function buildFooter(meta) {
   const reactionSummary = document.querySelector('.reaction-summary');
   const reactionMenu = document.querySelector('.reaction-menu');
   const reactionBtns = document.querySelectorAll('.reaction-btn');
-  const resetBtn = document.getElementById('resetBtn');
 
   // Show menu on click (keep open until click outside or select)
   let menuOpen = false;
@@ -379,18 +375,61 @@ function buildFooter(meta) {
       handleReaction(btn.dataset.reaction);
     });
   });
+}
 
-  // Handle reset button
-  resetBtn.addEventListener('click', () => {
-    if (confirm('Are you sure you want to reset all reaction counters?')) {
-      const reactionTypes = ['like', 'heart', 'laugh', 'surprise', 'sad', 'angry', 'dislike'];
-      reactionTypes.forEach(type => {
-        localStorage.removeItem(`${type}Count`);
-      });
-      localStorage.removeItem('currentReaction');
-      if (globalMeta) {
-        buildFooter(globalMeta);
+// --- New Command Line Logic ---
+function initCommandLine() {
+  const hiddenIcon = document.getElementById('hiddenIcon');
+  const commandLine = document.getElementById('commandLine');
+  const commandInput = document.getElementById('commandInput');
+  const errorBubble = document.getElementById('errorBubble');
+
+  hiddenIcon.addEventListener('click', () => {
+    hiddenIcon.classList.add('hidden');
+    commandLine.classList.remove('hidden');
+    commandInput.focus();
+  });
+
+  commandInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const command = commandInput.value.trim().toLowerCase();
+      
+      if (command === 'reset icon') {
+        // Reset reaction counters
+        const reactionTypes = ['like', 'heart', 'laugh', 'surprise', 'sad', 'angry', 'dislike'];
+        reactionTypes.forEach(type => {
+          localStorage.removeItem(`${type}Count`);
+        });
+        localStorage.removeItem('currentReaction');
+        if (globalMeta) {
+          buildFooter(globalMeta);
+        }
+        commandLine.classList.add('hidden');
+        hiddenIcon.classList.remove('hidden');
+        commandInput.value = '';
+      } else if (command === 'reset visitor') {
+        // Visitor counter is from external API, so we can't reset it. Let's inform user? Or just do nothing?
+        // For now, let's just close the command line as a placeholder.
+        commandLine.classList.add('hidden');
+        hiddenIcon.classList.remove('hidden');
+        commandInput.value = '';
+      } else {
+        // Show error bubble
+        errorBubble.classList.remove('hidden');
+        setTimeout(() => {
+          errorBubble.classList.add('hidden');
+        }, 2000);
+        commandInput.value = '';
       }
+    }
+  });
+
+  // Close command line when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!commandLine.contains(e.target) && !hiddenIcon.contains(e.target)) {
+      commandLine.classList.add('hidden');
+      hiddenIcon.classList.remove('hidden');
+      commandInput.value = '';
     }
   });
 }
@@ -499,6 +538,7 @@ async function init() {
     buildFooter(data.meta);
     initScrollReveal();
     initContactForm();
+    initCommandLine();
 
     document.title = `${data.meta.name} | Portfolio`;
 
