@@ -15,7 +15,7 @@
   "about": {
     "headline": "20+ Years of Technical Excellence",
     "paragraphs": [
-      "Technical Support, Quality Assurance, and Data Operations professional with 20+ years of experience spanning corporate BPO environments (Verizon, Comcast, Amazon) and independent software/hardware consulting. Skilled in ServiceNow, Salesforce, custom Android development (Java), and full-stack web technologies. Consistently delivers process improvements, compliance auditing, and technical solutions in high-volume, SLA-driven environments.",
+      "Technical Support, Quality Assurance, and Data Operations professional with 20+ years of experience spanning corporate BPO environments (Verizon, Comcast, Amazon) and independent software/hardware consulting. Skilled in ServiceNow, Salesforce, SAP, custom Android development (Java), and full-stack web technologies. Consistently delivers process improvements, compliance auditing, and technical solutions in high-volume, SLA-driven environments.",
       "I have progressed through roles in frontline customer operations, helpdesk analysis, revenue assurance, and quality analysis, consistently delivering process improvements, compliance auditing, and technical solutions in high-volume, SLA-driven environments.",
       "Beyond corporate work, I have been a self-employed freelance developer since 2003 — building Android utility apps, full-stack web projects, and providing component-level hardware repair services to academic and small-business clients."
     ]
@@ -29,7 +29,7 @@
     {
       "category": "Tools & Platforms",
       "icon": "wrench",
-      "items": ["ServiceNow", "Salesforce", "Android Studio", "Jira", "Git", "Google Workspace", "Microsoft Office"]
+      "items": ["ServiceNow", "Salesforce", "SAP", "Android Studio", "Jira", "Git", "Google Workspace", "Microsoft Office"]
     },
     {
       "category": "Legacy Systems & Hardware",
