@@ -397,21 +397,30 @@ function handleReaction(newReaction) {
   const reactionTypes = ['like', 'heart', 'laugh', 'surprise', 'sad', 'angry', 'dislike'];
   const oldReaction = localStorage.getItem('currentReaction');
 
-  // Remove old reaction if exists
-  if (oldReaction) {
+  // If clicking the same reaction, remove it
+  if (oldReaction === newReaction) {
     const oldCount = parseInt(localStorage.getItem(`${oldReaction}Count`) || '0');
     if (oldCount > 0) {
       localStorage.setItem(`${oldReaction}Count`, oldCount - 1);
     }
-  }
-
-  // Add new reaction if not null
-  if (newReaction) {
-    const newCount = parseInt(localStorage.getItem(`${newReaction}Count`) || '0');
-    localStorage.setItem(`${newReaction}Count`, newCount + 1);
-    localStorage.setItem('currentReaction', newReaction);
-  } else {
     localStorage.removeItem('currentReaction');
+  } else {
+    // Remove old reaction if exists
+    if (oldReaction) {
+      const oldCount = parseInt(localStorage.getItem(`${oldReaction}Count`) || '0');
+      if (oldCount > 0) {
+        localStorage.setItem(`${oldReaction}Count`, oldCount - 1);
+      }
+    }
+
+    // Add new reaction if not null
+    if (newReaction) {
+      const newCount = parseInt(localStorage.getItem(`${newReaction}Count`) || '0');
+      localStorage.setItem(`${newReaction}Count`, newCount + 1);
+      localStorage.setItem('currentReaction', newReaction);
+    } else {
+      localStorage.removeItem('currentReaction');
+    }
   }
 
   // Re-render footer to update counts
