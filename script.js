@@ -253,16 +253,58 @@ function buildAwards(awards) {
 
 
 function buildFooter(meta) {
+  const hasVoted = localStorage.getItem('hasVoted');
+  const likes = parseInt(localStorage.getItem('likeCount') || '0');
+  const dislikes = parseInt(localStorage.getItem('dislikeCount') || '0');
+
   document.getElementById('footer').innerHTML = `
-    <div class="border-t border-slate-800 py-8 px-4 text-center text-sm text-muted">
-      <p>© ${new Date().getFullYear()} ${meta.name} · Built with HTML, Tailwind CSS & Vanilla JS</p>
-      <p class="mt-1">${meta.location}</p>
-      <p class="mt-4">
-        <a href="https://www.visitorbadge.io/" target="_blank" rel="noopener">
-          <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fjezreelpilapil-lab.github.io%2FJezreelPilapilThePort%2F&countColor=%2338bdf8" alt="Visitor Counter">
-        </a>
-      </p>
+    <div class="border-t border-slate-800 py-8 px-4">
+      <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="text-center md:text-left">
+          <p>© ${new Date().getFullYear()} ${meta.name} · Built with HTML, Tailwind CSS & Vanilla JS</p>
+          <p class="mt-1">${meta.location}</p>
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="https://www.visitorbadge.io/" target="_blank" rel="noopener">
+            <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fjezreelpilapil-lab.github.io%2FJezreelPilapilThePort%2F&countColor=%2338bdf8" alt="Visitor Counter">
+          </a>
+          <div class="flex items-center gap-4">
+            <button id="likeBtn" class="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 hover:border-brand transition-colors ${hasVoted === 'like' ? 'border-green-500 text-green-500' : ''}" ${hasVoted ? 'disabled' : ''}>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.057L8 20V10.5A1.5 1.5 0 019.5 9H11l2-6h2l1 6z" />
+              </svg>
+              <span id="likeCount">${likes}</span>
+            </button>
+            <button id="dislikeBtn" class="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 hover:border-brand transition-colors ${hasVoted === 'dislike' ? 'border-red-500 text-red-500' : ''}" ${hasVoted ? 'disabled' : ''}>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.737 3h4.017c.163 0 .326.02.485.057L16 4v9.5A1.5 1.5 0 0114.5 15H13l-2 6H9l-1-6z" />
+              </svg>
+              <span id="dislikeCount">${dislikes}</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>`;
+
+  // Add event listeners for like/dislike
+  document.getElementById('likeBtn').addEventListener('click', () => handleVote('like'));
+  document.getElementById('dislikeBtn').addEventListener('click', () => handleVote('dislike'));
+}
+
+function handleVote(type) {
+  if (localStorage.getItem('hasVoted')) return;
+  
+  const currentCount = parseInt(localStorage.getItem(`${type}Count`) || '0');
+  localStorage.setItem(`${type}Count`, currentCount + 1);
+  localStorage.setItem('hasVoted', type);
+  
+  document.getElementById(`${type}Count`).textContent = currentCount + 1;
+  document.getElementById('likeBtn').disabled = true;
+  document.getElementById('dislikeBtn').disabled = true;
+  document.getElementById('likeBtn').classList.toggle('border-green-500', type === 'like');
+  document.getElementById('likeBtn').classList.toggle('text-green-500', type === 'like');
+  document.getElementById('dislikeBtn').classList.toggle('border-red-500', type === 'dislike');
+  document.getElementById('dislikeBtn').classList.toggle('text-red-500', type === 'dislike');
 }
 
 // ─── Scroll animation (Intersection Observer) ────────────────────────────────
