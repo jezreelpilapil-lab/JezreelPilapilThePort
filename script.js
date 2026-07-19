@@ -257,6 +257,11 @@ function buildFooter(meta) {
     <div class="border-t border-slate-800 py-8 px-4 text-center text-sm text-muted">
       <p>© ${new Date().getFullYear()} ${meta.name} · Built with HTML, Tailwind CSS & Vanilla JS</p>
       <p class="mt-1">${meta.location}</p>
+      <p class="mt-4">
+        <a href="https://www.visitorbadge.io/" target="_blank" rel="noopener">
+          <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fjezreelpilapil-lab.github.io%2FJezreelPilapilThePort%2F&countColor=%2338bdf8" alt="Visitor Counter">
+        </a>
+      </p>
     </div>`;
 }
 
