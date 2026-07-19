@@ -388,7 +388,9 @@ function buildFooter(meta) {
         localStorage.removeItem(`${type}Count`);
       });
       localStorage.removeItem('currentReaction');
-      location.reload();
+      if (globalMeta) {
+        buildFooter(globalMeta);
+      }
     }
   });
 }
@@ -424,9 +426,9 @@ function handleReaction(newReaction) {
   }
 
   // Re-render footer to update counts
-  // We need to re-call buildFooter, but first we need the meta data
-  // Since we don't have it here, let's just reload the page for simplicity
-  location.reload();
+  if (globalMeta) {
+    buildFooter(globalMeta);
+  }
 }
 
 // ─── Scroll animation (Intersection Observer) ────────────────────────────────
@@ -470,13 +472,17 @@ function initContactForm() {
   });
 }
 
-// ─── Main bootstrap ──────────────────────────────────────────────────────────
+// ─── Global variable to store meta data ───────────────────────────────────────
+let globalMeta = null;
+
+// ─── Main bootstrap ───────────────────────────────────────────────────────────
 async function init() {
   try {
     const res  = await fetch('portfolio.json');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
+    globalMeta = data.meta;
     buildNav(data.meta);
 
     document.getElementById('app').innerHTML = [
