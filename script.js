@@ -33,6 +33,17 @@ function getCookie(name) {
   return null;
 }
 
+// ─── Supabase Client ─────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://yobczuepdtlenjgvwdqy.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlvYmN6dWVwZHRsZW5qZ3Z3ZHF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1MjEyMjEsImV4cCI6MjEwMDA5NzIyMX0.OQivQw3E5-wHcYmD87VtZsCRItaluJNI9LLhVk6c5W8';
+let supabaseClient = null;
+try {
+  supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  console.log('Supabase client initialized successfully');
+} catch (e) {
+  console.warn('Supabase init failed, falling back to localStorage:', e);
+}
+
 // ─── Utility ─────────────────────────────────────────────────────────────────
 const icon = (name, extra = '') =>
   `<span class="text-brand ${extra}">${ICONS[name] ?? ''}</span>`;
