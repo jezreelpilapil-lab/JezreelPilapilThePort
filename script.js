@@ -607,7 +607,7 @@ function tossCoin() {
     const resultEl = document.getElementById('coinResult');
     const labelEl = document.getElementById('coinLabel');
     if (resultEl) resultEl.classList.replace('opacity-0', 'opacity-100');
-    if (labelEl) labelEl.innerHTML = '<span class="text-red-500 font-bold">Warning! No gambling</span><br/>RESULT:';
+    if (labelEl) labelEl.innerHTML = '<span class="text-red-500 font-bold">Warning!</span> No gambling<br/>RESULT:';
 
     // Wire up "Use this as logo" button
     const useBtn = document.getElementById('useAsLogo');
