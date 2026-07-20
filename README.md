@@ -45,6 +45,13 @@ The portfolio includes a hidden command line interface that can be accessed by c
 - **`reset icon`**: Resets all reaction counts and clears the current reaction.
 - **`reset visitor`**: Resets locally stored visitor statistics.
 - **`stat full visitor`**: Displays a modal with detailed visitor statistics, including device type, browser, ISP, and recent visits.
+- **`show me`**: Changes the logo to `logome.jpg`.
+- **`show you`**: Changes the logo back to `logo.png`.
+- **`help`**: Shows a help bubble with all available commands.
 
 ### Error Handling:
 - If an unknown command is entered, a red error bubble saying "Bad or unknown command" will appear and fade out after 2 seconds.
+
+### Command History:
+- Use the **Up Arrow** key to navigate to previous commands
+- Use the **Down Arrow** key to navigate to next commands (or clear the input)

@@ -439,6 +439,21 @@ function buildHiddenUI(uiConfig) {
   hiddenIcon.textContent = uiConfig.hidden_icon.content;
   container.appendChild(hiddenIcon);
   
+  // Help Bubble
+  const helpBubble = document.createElement('div');
+  helpBubble.id = 'helpBubble';
+  helpBubble.className = 'fixed bottom-16 left-4 bg-slate-800 border border-slate-700 rounded-lg p-4 hidden flex-col gap-2 shadow-lg text-slate-300 text-sm max-w-sm';
+  helpBubble.innerHTML = `
+    <div class="font-bold text-white mb-2">Available Commands:</div>
+    <div>- reset icon: Resets reaction counts</div>
+    <div>- reset visitor: Resets visitor stats</div>
+    <div>- stat full visitor: Shows detailed visitor stats</div>
+    <div>- show me: Changes logo to logome.jpg</div>
+    <div>- show you: Changes logo to logo.png</div>
+    <div>- help: Shows this help</div>
+  `;
+  container.appendChild(helpBubble);
+  
   // Command Line
   const commandLine = document.createElement('div');
   commandLine.id = uiConfig.command_line.id;
@@ -474,6 +489,11 @@ function initCommandLine() {
   const commandLine = document.getElementById('commandLine');
   const commandInput = document.getElementById('commandInput');
   const errorBubble = document.getElementById('errorBubble');
+  const helpBubble = document.getElementById('helpBubble');
+
+  // Command history
+  let commandHistory = JSON.parse(localStorage.getItem('commandHistory') || '[]');
+  let historyIndex = -1;
 
   hiddenIcon.addEventListener('click', () => {
     hiddenIcon.classList.add('hidden');
@@ -484,6 +504,15 @@ function initCommandLine() {
   commandInput.addEventListener('keydown', async (e) => {
     if (e.key === 'Enter') {
       const command = commandInput.value.trim().toLowerCase();
+      
+      if (command) {
+        // Add to history if not duplicate of last
+        if (commandHistory.length === 0 || commandHistory[commandHistory.length - 1] !== command) {
+          commandHistory.push(command);
+          localStorage.setItem('commandHistory', JSON.stringify(commandHistory));
+        }
+        historyIndex = commandHistory.length;
+      }
       
       if (command === 'reset icon') {
         // Reset reaction counters
@@ -523,6 +552,27 @@ function initCommandLine() {
         commandLine.classList.add('hidden');
         hiddenIcon.classList.remove('hidden');
         commandInput.value = '';
+      } else if (command === 'show me') {
+        // Change logo to logome.jpg
+        const logoElements = document.querySelectorAll('img[src="logo.png"]');
+        logoElements.forEach(img => img.src = 'logome.jpg');
+        commandLine.classList.add('hidden');
+        hiddenIcon.classList.remove('hidden');
+        commandInput.value = '';
+      } else if (command === 'show you') {
+        // Change logo back to logo.png
+        const logoElements = document.querySelectorAll('img[src="logome.jpg"]');
+        logoElements.forEach(img => img.src = 'logo.png');
+        commandLine.classList.add('hidden');
+        hiddenIcon.classList.remove('hidden');
+        commandInput.value = '';
+      } else if (command === 'help') {
+        // Toggle help bubble
+        helpBubble.classList.toggle('hidden');
+        if (!helpBubble.classList.contains('hidden')) {
+          helpBubble.classList.add('flex');
+        }
+        commandInput.value = '';
       } else {
         // Show error bubble
         errorBubble.classList.remove('hidden');
@@ -531,13 +581,30 @@ function initCommandLine() {
         }, 2000);
         commandInput.value = '';
       }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (historyIndex > 0) {
+        historyIndex--;
+        commandInput.value = commandHistory[historyIndex];
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex < commandHistory.length - 1) {
+        historyIndex++;
+        commandInput.value = commandHistory[historyIndex];
+      } else {
+        historyIndex = commandHistory.length;
+        commandInput.value = '';
+      }
     }
   });
 
-  // Close command line when clicking outside
+  // Close command line/help when clicking outside
   document.addEventListener('click', (e) => {
-    if (!commandLine.contains(e.target) && !hiddenIcon.contains(e.target)) {
+    if (!commandLine.contains(e.target) && !hiddenIcon.contains(e.target) && !helpBubble.contains(e.target)) {
       commandLine.classList.add('hidden');
+      helpBubble.classList.add('hidden');
+      helpBubble.classList.remove('flex');
       hiddenIcon.classList.remove('hidden');
       commandInput.value = '';
     }
