@@ -523,22 +523,27 @@ function tossCoin() {
 
   const isHeads = Math.random() < 0.5;
   const result = isHeads ? 'HEADS' : 'TAILS';
+  // HEADS = logome.jpg (your face), TAILS = logo.png (JAP logo)
   const resultImg = isHeads ? 'logome.jpg' : 'logo.png';
   const resultColor = isHeads ? 'text-yellow-400' : 'text-brand';
+  const resultLabel = isHeads ? '👤 Your face' : '🔷 Logo';
+  const borderColor = isHeads ? '#facc15' : '#38bdf8';
+  const glowColor = isHeads ? 'rgba(250,204,21,0.3)' : 'rgba(56,189,248,0.3)';
 
-  // Random spin direction: positive or negative degrees (always multiple full rotations + 180 for tails, 360 for heads)
-  const extraSpins = (Math.floor(Math.random() * 4) + 4) * 360; // 4–7 full rotations
-  const flipDir = Math.random() < 0.5 ? 1 : -1;                 // random left or right
-  const finalAngle = flipDir * (extraSpins + (isHeads ? 0 : 180));
+  // Random spin direction and number of rotations
+  const extraSpins = (Math.floor(Math.random() * 4) + 4) * 360;
+  const flipDir = Math.random() < 0.5 ? 1 : -1;
+  // Heads lands on back face (180°), tails lands on front face (360°)
+  const finalAngle = flipDir * (extraSpins + (isHeads ? 180 : 360));
 
   const modal = document.createElement('div');
   modal.id = 'coinModal';
   modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm';
   modal.innerHTML = `
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 flex flex-col items-center gap-6 shadow-2xl max-w-xs w-full mx-4">
-      <p class="text-slate-400 text-sm tracking-widest uppercase">Tossing...</p>
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 flex flex-col items-center gap-6 shadow-2xl max-w-xs w-full mx-4" id="coinCard">
+      <p class="text-slate-400 text-sm tracking-widest uppercase" id="coinLabel">Tossing...</p>
 
-      <div id="coinWrapper" style="perspective: 600px;">
+      <div style="perspective: 600px;">
         <div id="coinInner" style="
           width: 120px; height: 120px;
           position: relative;
@@ -546,7 +551,7 @@ function tossCoin() {
           transition: transform 1.4s cubic-bezier(0.33,1,0.68,1);
           transform: rotateY(0deg);
         ">
-          <!-- Front: logo.png (tails) -->
+          <!-- Front face: logo.png = TAILS -->
           <div style="
             position: absolute; inset: 0;
             backface-visibility: hidden;
@@ -556,7 +561,7 @@ function tossCoin() {
           ">
             <img src="logo.png" alt="Tails" style="width:100%;height:100%;object-fit:cover;" />
           </div>
-          <!-- Back: logome.jpg (heads) rotated 180 so it shows on flip -->
+          <!-- Back face: logome.jpg = HEADS (rotated 180 so it appears on flip) -->
           <div style="
             position: absolute; inset: 0;
             backface-visibility: hidden;
@@ -572,34 +577,52 @@ function tossCoin() {
 
       <div id="coinResult" class="text-center opacity-0 transition-opacity duration-500">
         <p class="text-3xl font-bold ${resultColor}">${result}!</p>
-        <p class="text-slate-400 text-sm mt-1">${isHeads ? '👤 Your face' : '🔷 Logo'}</p>
+        <p class="text-slate-400 text-sm mt-1">${resultLabel}</p>
+        <button id="useAsLogo"
+          class="mt-3 text-xs px-4 py-1.5 rounded-full border border-slate-600 text-slate-400 hover:border-brand hover:text-brand transition-colors">
+          Use this as logo
+        </button>
       </div>
 
-      <button id="coinClose"
-        class="text-xs text-slate-500 hover:text-white transition-colors mt-2">
+      <button id="coinClose" class="text-xs text-slate-500 hover:text-white transition-colors">
         Click anywhere to dismiss
       </button>
     </div>`;
 
   document.body.appendChild(modal);
 
-  // Start spin after a short delay so transition fires
+  // Trigger spin on next frame
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       document.getElementById('coinInner').style.transform = `rotateY(${finalAngle}deg)`;
     });
   });
 
-  // Show result after animation completes
+  // Reveal result after animation
   setTimeout(() => {
     const resultEl = document.getElementById('coinResult');
+    const labelEl = document.getElementById('coinLabel');
     if (resultEl) resultEl.classList.replace('opacity-0', 'opacity-100');
-    const label = modal.querySelector('p.text-slate-400.text-sm.tracking-widest');
-    if (label) label.textContent = 'Result:';
+    if (labelEl) labelEl.textContent = 'Result:';
+
+    // Wire up "Use this as logo" button
+    const useBtn = document.getElementById('useAsLogo');
+    if (useBtn) {
+      useBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Swap all logo images to the winning face
+        document.querySelectorAll('img[src="logo.png"], img[src="logome.jpg"]').forEach(img => {
+          img.src = resultImg;
+        });
+        modal.remove();
+      });
+    }
   }, 1500);
 
-  // Dismiss on click
-  modal.addEventListener('click', () => modal.remove());
+  // Dismiss on click (but not on the "use as logo" button)
+  modal.addEventListener('click', (e) => {
+    if (e.target.id !== 'useAsLogo') modal.remove();
+  });
 }
 
 function initCommandLine() {
