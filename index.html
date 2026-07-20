@@ -9,13 +9,17 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
             brand: '#38bdf8',
             dark:  '#0f172a',
             card:  '#1e293b',
-            muted: '#94a3b8'
+            muted: '#94a3b8',
+            light: '#f8fafc',
+            lightCard: '#ffffff',
+            lightMuted: '#64748b'
           },
           fontFamily: {
             sans: ['Inter', 'ui-sans-serif', 'system-ui']
@@ -27,7 +31,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 </head>
-<body class="bg-dark text-slate-300 font-sans antialiased">
+<body class="bg-dark text-slate-300 dark:bg-dark dark:text-slate-300 bg-light text-slate-700 dark:bg-dark dark:text-slate-300 font-sans antialiased transition-colors duration-300">
 
   <!-- Navigation -->
   <nav id="navbar"></nav>

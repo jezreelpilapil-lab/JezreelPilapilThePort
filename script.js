@@ -19,21 +19,31 @@ const icon = (name, extra = '') =>
   `<span class="text-brand ${extra}">${ICONS[name] ?? ''}</span>`;
 
 const section = (id, content) => `
-  <section id="${id}" class="py-20 px-4">
+  <section id="${id}" class="py-20 px-4 bg-dark bg-light dark:bg-dark transition-colors duration-300">
     <div class="max-w-5xl mx-auto">${content}</div>
   </section>`;
 
 const sectionTitle = (text) =>
-  `<h2 class="text-3xl font-bold text-white mb-2">${text}</h2>
+  `<h2 class="text-3xl font-bold text-white dark:text-white text-slate-900 mb-2">${text}</h2>
    <div class="w-16 h-1 bg-brand rounded mb-10"></div>`;
 
 // ─── Navbar builder ──────────────────────────────────────────────────────────
 function buildNav(meta) {
   const links = ['About', 'Skills', 'Experience', 'Projects', 'Awards', 'Certifications', 'Contact'];
   document.getElementById('navbar').innerHTML = `
-    <header class="fixed top-0 inset-x-0 z-50 bg-dark/90 backdrop-blur border-b border-slate-800">
+    <header class="fixed top-0 inset-x-0 z-50 bg-dark/90 dark:bg-dark/90 bg-white/90 backdrop-blur border-b border-slate-800 dark:border-slate-800 border-slate-200 transition-colors duration-300">
       <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-        <img src="logo.png" alt="JAP Logo" class="w-8 h-8 rounded-full object-cover">
+        <div class="flex items-center gap-3">
+          <img src="logo.png" alt="JAP Logo" class="w-8 h-8 rounded-full object-cover">
+          <button id="darkModeToggle" class="p-2 rounded-full border border-slate-700 hover:border-brand transition-colors">
+            <svg id="sunIcon" class="w-5 h-5 text-yellow-500 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            <svg id="moonIcon" class="w-5 h-5 text-slate-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+          </button>
+        </div>
         <nav class="hidden md:flex gap-6 text-sm font-medium">
           ${links.map(l => `<a href="#${l.toLowerCase()}" class="hover:text-brand transition-colors">${l}</a>`).join('')}
         </nav>
@@ -49,22 +59,43 @@ function buildNav(meta) {
         </div>
       </div>
     </header>`;
+
+  // Dark mode toggle logic
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const sunIcon = document.getElementById('sunIcon');
+  const moonIcon = document.getElementById('moonIcon');
+  const html = document.documentElement;
+
+  // Check for saved preference
+  if (localStorage.getItem('darkMode') === 'true') {
+    html.classList.add('dark');
+    sunIcon.classList.remove('hidden');
+    moonIcon.classList.add('hidden');
+  }
+
+  darkModeToggle.addEventListener('click', () => {
+    html.classList.toggle('dark');
+    const isDark = html.classList.contains('dark');
+    localStorage.setItem('darkMode', isDark);
+    sunIcon.classList.toggle('hidden', !isDark);
+    moonIcon.classList.toggle('hidden', isDark);
+  });
 }
 
 // ─── Hero builder ────────────────────────────────────────────────────────────
 function buildHero(meta) {
   return `
-    <section id="hero" class="min-h-screen flex items-center justify-center px-4 pt-16">
+    <section id="hero" class="min-h-screen flex items-center justify-center px-4 pt-16 bg-dark bg-light dark:bg-dark transition-colors duration-300">
       <div class="max-w-3xl text-center">
         <img src="logo.png" alt="JAP Logo" class="w-32 h-32 mx-auto mb-6 rounded-full object-cover">
         <p class="text-brand text-sm font-semibold tracking-widest uppercase mb-4">Portfolio</p>
-        <h1 class="text-5xl md:text-6xl font-bold text-white leading-tight mb-4">${meta.name}</h1>
-        <p class="text-xl text-muted mb-8">${meta.tagline}</p>
-        <div class="flex flex-wrap justify-center gap-4 mb-10 text-sm text-slate-400">
+        <h1 class="text-5xl md:text-6xl font-bold text-white dark:text-white text-slate-900 leading-tight mb-4">${meta.name}</h1>
+        <p class="text-xl text-muted dark:text-muted text-lightMuted mb-8">${meta.tagline}</p>
+        <div class="flex flex-wrap justify-center gap-4 mb-10 text-sm text-slate-400 dark:text-slate-400 text-slate-600">
           <span>${meta.location}</span>
-          <span class="text-slate-600">|</span>
+          <span class="text-slate-600 dark:text-slate-600 text-slate-300">|</span>
           <a href="mailto:${meta.email}" class="hover:text-brand transition-colors">${meta.email}</a>
-          <span class="text-slate-600">|</span>
+          <span class="text-slate-600 dark:text-slate-600 text-slate-300">|</span>
           <span>${meta.phone}</span>
         </div>
         <div class="flex flex-wrap justify-center gap-3">
@@ -77,17 +108,17 @@ function buildHero(meta) {
             View Projects
           </a>
           <a href="${meta.resume}" download
-             class="bg-slate-700 text-white font-semibold px-6 py-3 rounded-full hover:bg-slate-600 transition">
+             class="bg-slate-700 dark:bg-slate-700 bg-slate-200 text-white dark:text-white text-slate-800 font-semibold px-6 py-3 rounded-full hover:bg-slate-600 dark:hover:bg-slate-600 hover:bg-slate-300 transition">
             Download Full Resume
           </a>
           <a href="${meta.resume_short}" download
-             class="border border-slate-600 text-slate-300 font-semibold px-6 py-3 rounded-full hover:bg-slate-800 transition">
+             class="border border-slate-600 dark:border-slate-600 border-slate-400 text-slate-300 dark:text-slate-300 text-slate-700 font-semibold px-6 py-3 rounded-full hover:bg-slate-800 dark:hover:bg-slate-800 hover:bg-slate-200 transition">
             Download Short Resume
           </a>
         </div>
         <div class="flex justify-center gap-5 mt-8">
           <a href="${meta.linkedin}" target="_blank" rel="noopener" class="text-muted hover:text-brand transition-colors">${ICONS.linkedin}</a>
-          <a href="${meta.github}"  target="_blank" rel="noopener" class="text-muted hover:text-brand transition-colors">${ICONS.github}</a>
+          <a href="${meta.github}" target="_blank" rel="noopener" class="text-muted hover:text-brand transition-colors">${ICONS.github}</a>
           <a href="mailto:${meta.email}" class="text-muted hover:text-brand transition-colors">${ICONS.mail}</a>
         </div>
       </div>
@@ -96,7 +127,7 @@ function buildHero(meta) {
 
 // ─── About builder ───────────────────────────────────────────────────────────
 function buildAbout(about) {
-  const paras = about.paragraphs.map(p => `<p class="text-slate-400 leading-relaxed mb-4">${p}</p>`).join('');
+  const paras = about.paragraphs.map(p => `<p class="text-slate-400 dark:text-slate-400 text-lightMuted leading-relaxed mb-4">${p}</p>`).join('');
   return section('about', `
     ${sectionTitle(about.headline)}
     <div class="grid md:grid-cols-2 gap-10 items-start">
@@ -104,13 +135,13 @@ function buildAbout(about) {
       <div class="grid grid-cols-2 gap-4">
         ${[
           ['20+', 'Years Experience'],
-          ['3',   'BPO Enterprises'],
-          ['6+',  'Android & Web Apps'],
-          ['∞',   'Problems Solved']
+          ['3', 'BPO Enterprises'],
+          ['6+', 'Android & Web Apps'],
+          ['∞', 'Problems Solved']
         ].map(([n, l]) => `
-          <div class="bg-card rounded-xl p-5 text-center border border-slate-700">
+          <div class="bg-card dark:bg-card bg-lightCard rounded-xl p-5 text-center border border-slate-700 dark:border-slate-700 border-slate-200 transition-colors duration-300">
             <div class="text-3xl font-bold text-brand">${n}</div>
-            <div class="text-xs text-muted mt-1">${l}</div>
+            <div class="text-xs text-muted dark:text-muted text-lightMuted mt-1">${l}</div>
           </div>`).join('')}
       </div>
     </div>`);
@@ -119,13 +150,13 @@ function buildAbout(about) {
 // ─── Skills builder ──────────────────────────────────────────────────────────
 function buildSkills(skills) {
   const cards = skills.map(s => `
-    <div class="bg-card border border-slate-700 rounded-xl p-6">
+    <div class="bg-card dark:bg-card bg-lightCard border border-slate-700 dark:border-slate-700 border-slate-200 rounded-xl p-6 transition-colors duration-300">
       <div class="flex items-center gap-3 mb-4">
         ${icon(s.icon)}
-        <h3 class="text-white font-semibold">${s.category}</h3>
+        <h3 class="text-white dark:text-white text-slate-900 font-semibold">${s.category}</h3>
       </div>
       <div class="flex flex-wrap gap-2">
-        ${s.items.map(i => `<span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700">${i}</span>`).join('')}
+        ${s.items.map(i => `<span class="text-xs bg-slate-800 dark:bg-slate-800 bg-slate-100 text-slate-300 dark:text-slate-300 text-slate-700 px-3 py-1 rounded-full border border-slate-700 dark:border-slate-700 border-slate-300 transition-colors duration-300">${i}</span>`).join('')}
       </div>
     </div>`).join('');
   return section('skills', `${sectionTitle('Core Skills')}<div class="grid sm:grid-cols-2 gap-6">${cards}</div>`);
@@ -137,21 +168,21 @@ function buildExperience(experience) {
     const roles = job.roles.map(r => `
       <div class="mb-6 last:mb-0">
         <div class="flex flex-wrap justify-between items-baseline gap-2 mb-2">
-          <h4 class="text-white font-medium">${r.title}</h4>
+          <h4 class="text-white dark:text-white text-slate-900 font-medium">${r.title}</h4>
           <span class="text-xs text-brand whitespace-nowrap">${r.period}</span>
         </div>
         <ul class="space-y-1">
-          ${r.bullets.map(b => `<li class="text-slate-400 text-sm pl-4 relative before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-brand before:rounded-full">${b}</li>`).join('')}
+          ${r.bullets.map(b => `<li class="text-slate-400 dark:text-slate-400 text-lightMuted text-sm pl-4 relative before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-brand before:rounded-full">${b}</li>`).join('')}
         </ul>
       </div>`).join('');
     return `
-      <div class="bg-card border border-slate-700 rounded-xl p-6 mb-6 last:mb-0">
+      <div class="bg-card dark:bg-card bg-lightCard border border-slate-700 dark:border-slate-700 border-slate-200 rounded-xl p-6 mb-6 last:mb-0 transition-colors duration-300">
         <div class="flex flex-wrap justify-between items-start gap-2 mb-1">
-          <h3 class="text-white font-bold text-lg">${job.company}</h3>
+          <h3 class="text-white dark:text-white text-slate-900 font-bold text-lg">${job.company}</h3>
           <span class="text-xs text-muted whitespace-nowrap">${job.period}</span>
         </div>
-        ${job.formerly ? `<p class="text-xs text-slate-500 mb-1">${job.formerly}</p>` : ''}
-        <p class="text-xs text-muted mb-5">${job.location}</p>
+        ${job.formerly ? `<p class="text-xs text-slate-500 dark:text-slate-500 text-slate-400 mb-1">${job.formerly}</p>` : ''}
+        <p class="text-xs text-muted dark:text-muted text-lightMuted mb-5">${job.location}</p>
         ${roles}
       </div>`;
   }).join('');
@@ -164,25 +195,25 @@ function buildProjects(projects) {
   const cases = projects.filter(p => p.type === 'casestudy');
 
   const card = (p) => `
-    <div class="bg-card border border-slate-700 rounded-xl p-6 flex flex-col hover:border-brand transition-colors">
+    <div class="bg-card dark:bg-card bg-lightCard border border-slate-700 dark:border-slate-700 border-slate-200 rounded-xl p-6 flex flex-col hover:border-brand transition-colors duration-300">
       <div class="flex items-center gap-3 mb-3">
         ${icon(p.icon, 'flex-shrink-0')}
-        <h3 class="text-white font-semibold">${p.name}</h3>
+        <h3 class="text-white dark:text-white text-slate-900 font-semibold">${p.name}</h3>
       </div>
-      <p class="text-slate-400 text-sm flex-1 mb-4">${p.description}</p>
+      <p class="text-slate-400 dark:text-slate-400 text-lightMuted text-sm flex-1 mb-4">${p.description}</p>
       <div class="flex flex-wrap gap-2 mb-4">
-        ${p.tech.map(t => `<span class="text-xs bg-slate-800 text-brand px-2 py-0.5 rounded border border-brand/30">${t}</span>`).join('')}
+        ${p.tech.map(t => `<span class="text-xs bg-slate-800 dark:bg-slate-800 bg-slate-100 text-brand px-2 py-0.5 rounded border border-brand/30 transition-colors duration-300">${t}</span>`).join('')}
       </div>
       ${p.repo ? `<a href="${p.repo}" target="_blank" rel="noopener" class="text-xs text-brand hover:underline">View on GitHub →</a>` : ''}
     </div>`;
 
   return section('projects', `
     ${sectionTitle('Projects & Case Studies')}
-    <h3 class="text-white font-semibold mb-4 text-lg">📱 Android Applications</h3>
+    <h3 class="text-white dark:text-white text-slate-900 font-semibold mb-4 text-lg">📱 Android Applications</h3>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
       ${apps.map(card).join('')}
     </div>
-    <h3 class="text-white font-semibold mb-4 text-lg">📋 Technical Case Studies</h3>
+    <h3 class="text-white dark:text-white text-slate-900 font-semibold mb-4 text-lg">📋 Technical Case Studies</h3>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
       ${cases.map(card).join('')}
     </div>`);
@@ -191,11 +222,11 @@ function buildProjects(projects) {
 // ─── Certifications builder ──────────────────────────────────────────────────
 function buildCertifications(certs) {
   const items = certs.map(c => `
-    <div class="bg-card border border-slate-700 rounded-xl p-5 flex gap-4 items-start">
+    <div class="bg-card dark:bg-card bg-lightCard border border-slate-700 dark:border-slate-700 border-slate-200 rounded-xl p-5 flex gap-4 items-start transition-colors duration-300">
       <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center flex-shrink-0 text-brand font-bold text-lg">${c.year.slice(-2)}</div>
       <div>
-        <p class="text-white font-medium">${c.name}</p>
-        <p class="text-xs text-muted">${c.school} · ${c.location} · ${c.year}</p>
+        <p class="text-white dark:text-white text-slate-900 font-medium">${c.name}</p>
+        <p class="text-xs text-muted dark:text-muted text-lightMuted">${c.school} · ${c.location} · ${c.year}</p>
       </div>
     </div>`).join('');
   return section('certifications', `${sectionTitle('Certifications & Training')}<div class="grid sm:grid-cols-2 gap-4">${items}</div>`);
@@ -207,28 +238,28 @@ function buildContact(contact, meta) {
     ${sectionTitle('Contact Me')}
     <div class="grid md:grid-cols-2 gap-12">
       <div>
-        <p class="text-slate-400 mb-8 leading-relaxed">${contact.cta}</p>
+        <p class="text-slate-400 dark:text-slate-400 text-lightMuted mb-8 leading-relaxed">${contact.cta}</p>
         <div class="space-y-4">
-          <a href="mailto:${meta.email}" class="flex items-center gap-3 text-slate-400 hover:text-brand transition-colors">
+          <a href="mailto:${meta.email}" class="flex items-center gap-3 text-slate-400 dark:text-slate-400 text-lightMuted hover:text-brand transition-colors">
             ${ICONS.mail}<span>${meta.email}</span>
           </a>
-          <a href="${meta.linkedin}" target="_blank" rel="noopener" class="flex items-center gap-3 text-slate-400 hover:text-brand transition-colors">
+          <a href="${meta.linkedin}" target="_blank" rel="noopener" class="flex items-center gap-3 text-slate-400 dark:text-slate-400 text-lightMuted hover:text-brand transition-colors">
             ${ICONS.linkedin}<span>LinkedIn Profile</span>
           </a>
-          <a href="${meta.github}" target="_blank" rel="noopener" class="flex items-center gap-3 text-slate-400 hover:text-brand transition-colors">
+          <a href="${meta.github}" target="_blank" rel="noopener" class="flex items-center gap-3 text-slate-400 dark:text-slate-400 text-lightMuted hover:text-brand transition-colors">
             ${ICONS.github}<span>GitHub</span>
           </a>
         </div>
       </div>
       <form action="${contact.formspree}" method="POST" class="space-y-4" id="contact-form">
         <input type="text" name="name" placeholder="Your Name" required
-          class="w-full bg-card border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand transition-colors" />
+          class="w-full bg-card dark:bg-card bg-lightCard border border-slate-700 dark:border-slate-700 border-slate-300 rounded-lg px-4 py-3 text-white dark:text-white text-slate-900 placeholder-slate-500 focus:outline-none focus:border-brand transition-colors duration-300" />
         <input type="email" name="email" placeholder="Your Email" required
-          class="w-full bg-card border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand transition-colors" />
+          class="w-full bg-card dark:bg-card bg-lightCard border border-slate-700 dark:border-slate-700 border-slate-300 rounded-lg px-4 py-3 text-white dark:text-white text-slate-900 placeholder-slate-500 focus:outline-none focus:border-brand transition-colors duration-300" />
         <input type="text" name="subject" placeholder="Subject"
-          class="w-full bg-card border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand transition-colors" />
+          class="w-full bg-card dark:bg-card bg-lightCard border border-slate-700 dark:border-slate-700 border-slate-300 rounded-lg px-4 py-3 text-white dark:text-white text-slate-900 placeholder-slate-500 focus:outline-none focus:border-brand transition-colors duration-300" />
         <textarea name="message" rows="4" placeholder="Your message..." required
-          class="w-full bg-card border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-brand transition-colors resize-none"></textarea>
+          class="w-full bg-card dark:bg-card bg-lightCard border border-slate-700 dark:border-slate-700 border-slate-300 rounded-lg px-4 py-3 text-white dark:text-white text-slate-900 placeholder-slate-500 focus:outline-none focus:border-brand transition-colors duration-300 resize-none"></textarea>
         <button type="submit"
           class="w-full bg-brand text-dark font-semibold py-3 rounded-lg hover:brightness-110 transition">
           Send Message
@@ -240,12 +271,12 @@ function buildContact(contact, meta) {
 // ─── Awards builder ──────────────────────────────────────────────────────────
 function buildAwards(awards) {
   const items = awards.map(a => `
-    <div class="bg-card border border-yellow-500/30 rounded-xl p-5 flex gap-4 items-start">
+    <div class="bg-card dark:bg-card bg-lightCard border border-yellow-500/30 dark:border-yellow-500/30 border-yellow-300/50 rounded-xl p-5 flex gap-4 items-start transition-colors duration-300">
       <div class="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center flex-shrink-0 text-yellow-400 text-xl">🏆</div>
       <div>
-        <p class="text-white font-semibold">${a.name}</p>
+        <p class="text-white dark:text-white text-slate-900 font-semibold">${a.name}</p>
         <p class="text-xs text-brand mb-2">${a.issuer} · ${a.date}</p>
-        <p class="text-slate-400 text-sm">${a.description}</p>
+        <p class="text-slate-400 dark:text-slate-400 text-lightMuted text-sm">${a.description}</p>
       </div>
     </div>`).join('');
   return section('awards', `${sectionTitle('Awards & Recognition')}<div class="grid sm:grid-cols-2 gap-4">${items}</div>`);
@@ -285,7 +316,7 @@ function buildFooter(meta) {
     
     return `
       <button 
-        class="reaction-btn px-2 py-1 rounded-full border border-slate-700 hover:border-brand transition-colors text-lg ${isActive ? color : ''}"
+        class="reaction-btn px-2 py-1 rounded-full border border-slate-700 dark:border-slate-700 border-slate-300 hover:border-brand transition-colors text-lg ${isActive ? color : ''}"
         data-reaction="${type}"
       >
         ${emoji}
@@ -314,24 +345,24 @@ function buildFooter(meta) {
   }).join('');
 
   document.getElementById('footer').innerHTML = `
-    <div class="border-t border-slate-800 py-8 px-4">
+    <div class="border-t border-slate-800 dark:border-slate-800 border-slate-200 py-8 px-4 bg-dark bg-light dark:bg-dark transition-colors duration-300">
       <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="text-center md:text-left">
+        <div class="text-center md:text-left text-slate-300 dark:text-slate-300 text-slate-700">
           <p>© ${new Date().getFullYear()} ${meta.name} · Built with HTML, Tailwind CSS & Vanilla JS</p>
-          <p class="mt-1">${meta.location}</p>
+          <p class="mt-1 text-muted dark:text-muted text-lightMuted">${meta.location}</p>
         </div>
         <div class="flex items-center gap-6">
           <a href="https://www.visitorbadge.io/" target="_blank" rel="noopener">
             <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fjezreelpilapil-lab.github.io%2FJezreelPilapilThePort%2F&countColor=%2338bdf8" alt="Visitor Counter">
           </a>
           <div class="relative">
-            <div class="reaction-summary flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 hover:border-brand transition-colors cursor-pointer">
+            <div class="reaction-summary flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 dark:border-slate-700 border-slate-300 hover:border-brand transition-colors cursor-pointer">
               <div class="flex -space-x-1">
                 ${topReactionsHTML || '<span class="text-lg">👍</span>'}
               </div>
-              <span class="text-sm text-slate-400">${totalReactions}</span>
+              <span class="text-sm text-slate-400 dark:text-slate-400 text-lightMuted">${totalReactions}</span>
             </div>
-            <div class="reaction-menu absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden flex gap-1 bg-slate-800 rounded-full p-1 shadow-lg border border-slate-700">
+            <div class="reaction-menu absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden flex gap-1 bg-slate-800 dark:bg-slate-800 bg-white rounded-full p-1 shadow-lg border border-slate-700 dark:border-slate-700 border-slate-200">
               ${reactionButtonsHTML}
             </div>
           </div>
