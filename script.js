@@ -499,6 +499,11 @@ function buildHiddenUI(uiConfig) {
 }
 
 // --- New Command Line Logic ---
+// Helper to delete a cookie
+function deleteCookie(name) {
+  document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
 function initCommandLine() {
   const hiddenIcon = document.getElementById('hiddenIcon');
   const commandLine = document.getElementById('commandLine');
@@ -609,6 +614,8 @@ function initCommandLine() {
           }
         }
         localStorage.removeItem('visitorStats');
+        deleteCookie('visited');
+        console.log('Visitor cookie and stats reset');
         commandLine.classList.add('hidden');
         helpBubble.classList.add('hidden');
         helpBubble.classList.remove('flex');
@@ -873,8 +880,11 @@ function parseUserAgent() {
 }
 
 async function trackVisitor() {
+  console.log('trackVisitor() called!');
   // Check if visitor already has a cookie
-  if (getCookie('visited')) {
+  const hasVisitedCookie = getCookie('visited');
+  console.log('Visited cookie:', hasVisitedCookie);
+  if (hasVisitedCookie) {
     console.log('Visitor already counted (cookie exists)');
     return;
   }
