@@ -892,7 +892,6 @@ function parseUserAgent() {
 
 async function trackVisitor() {
   console.log('trackVisitor() called!');
-  // Check if visitor already has a cookie
   const hasVisitedCookie = getCookie('visited');
   console.log('Visited cookie:', hasVisitedCookie);
   if (hasVisitedCookie) {
@@ -904,29 +903,24 @@ async function trackVisitor() {
   let visitData;
 
   try {
-    // Fetch IP/ISP info using ip-api.com (free, no API key needed)
-    const ipRes = await fetch('https://ip-api.com/json/');
+    // ipwho.is is HTTPS and free, no API key needed
+    const ipRes = await fetch('https://ipwho.is/');
     const ipData = await ipRes.json();
     console.log('IP API response:', ipData);
 
-    if (ipData.status === 'success') {
-      visitData = {
-        timestamp: new Date().toISOString(),
-        ip: ipData.query || 'Unknown',
-        isp: ipData.isp || 'Unknown',
-        country: ipData.country || 'Unknown',
-        region: ipData.regionName || 'Unknown',
-        city: ipData.city || 'Unknown',
-        browser: uaData.browser,
-        device_type: uaData.deviceType,
-        os: uaData.os
-      };
-    } else {
-      throw new Error(`IP API failed: ${ipData.message || 'Unknown error'}`);
-    }
+    visitData = {
+      timestamp: new Date().toISOString(),
+      ip: ipData.ip || 'Unknown',
+      isp: ipData.connection?.isp || 'Unknown',
+      country: ipData.country || 'Unknown',
+      region: ipData.region || 'Unknown',
+      city: ipData.city || 'Unknown',
+      browser: uaData.browser,
+      device_type: uaData.deviceType,
+      os: uaData.os
+    };
   } catch (err) {
     console.error('Failed to fetch IP info:', err);
-    // Fallback: basic data without IP/ISP
     visitData = {
       timestamp: new Date().toISOString(),
       ip: 'Unknown',
@@ -941,23 +935,21 @@ async function trackVisitor() {
   }
 
   if (supabaseClient) {
-    try {
-      await supabaseClient.from('visitors').insert(visitData);
-    } catch (err) {
-      console.error('Failed to send to Supabase, falling back to localStorage:', err);
-      // Fallback to localStorage
+    const { error } = await supabaseClient.from('visitors').insert(visitData);
+    if (error) {
+      console.error('Supabase insert failed:', error.message);
       const existingVisits = JSON.parse(localStorage.getItem('visitorStats') || '[]');
       existingVisits.push(visitData);
       localStorage.setItem('visitorStats', JSON.stringify(existingVisits));
+    } else {
+      console.log('Visitor tracked in Supabase successfully');
     }
   } else {
-    // Fallback to localStorage
     const existingVisits = JSON.parse(localStorage.getItem('visitorStats') || '[]');
     existingVisits.push(visitData);
     localStorage.setItem('visitorStats', JSON.stringify(existingVisits));
   }
 
-  // Set cookie to mark visitor as counted for 1 year
   setCookie('visited', 'true', 365);
 }
 
