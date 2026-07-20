@@ -541,7 +541,7 @@ function tossCoin() {
   modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm';
   modal.innerHTML = `
     <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 flex flex-col items-center gap-6 shadow-2xl max-w-xs w-full mx-4" id="coinCard">
-      <p class="text-slate-400 text-sm tracking-widest uppercase" id="coinLabel">Tara sugal tayo. TOSSING...</p>
+      <p class="text-slate-400 text-sm tracking-widest text-center" id="coinLabel">Tara sugal tayo.<br/>TOSSING...</p>
 
       <div style="perspective: 600px;">
         <div id="coinInner" style="
