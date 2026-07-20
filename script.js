@@ -349,7 +349,7 @@ async function buildFooter(meta) {
     <div class="border-t border-slate-200 dark:border-slate-800 py-8 px-4 bg-light dark:bg-dark transition-colors duration-300">
       <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="text-center md:text-left text-slate-700 dark:text-slate-300">
-          <p>© ${new Date().getFullYear()} ${meta.name} · Built with HTML, Tailwind CSS & Vanilla JS</p>
+          <p>© ${new Date().getFullYear()} ${meta.name} · Built with HTML, Tailwind CSS, Vanilla JS & SQL</p>
           <p class="mt-1 text-lightMuted dark:text-muted">${meta.location}</p>
         </div>
         <div class="flex items-center gap-6">
