@@ -466,6 +466,7 @@ function buildHiddenUI(uiConfig) {
     { cmd: 'stat full visitor', desc: 'Shows detailed visitor stats' },
     { cmd: 'show me', desc: 'Changes logo to logome.jpg' },
     { cmd: 'show you', desc: 'Changes logo to logo.png' },
+    { cmd: 'toss coin', desc: 'Flip a coin — heads or tails!' },
     { cmd: 'help', desc: 'Shows this help' }
   ];
 
@@ -513,6 +514,92 @@ function buildHiddenUI(uiConfig) {
 // Helper to delete a cookie
 function deleteCookie(name) {
   document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function tossCoin() {
+  // Remove existing modal if any
+  const existing = document.getElementById('coinModal');
+  if (existing) existing.remove();
+
+  const isHeads = Math.random() < 0.5;
+  const result = isHeads ? 'HEADS' : 'TAILS';
+  const resultImg = isHeads ? 'logome.jpg' : 'logo.png';
+  const resultColor = isHeads ? 'text-yellow-400' : 'text-brand';
+
+  // Random spin direction: positive or negative degrees (always multiple full rotations + 180 for tails, 360 for heads)
+  const extraSpins = (Math.floor(Math.random() * 4) + 4) * 360; // 4–7 full rotations
+  const flipDir = Math.random() < 0.5 ? 1 : -1;                 // random left or right
+  const finalAngle = flipDir * (extraSpins + (isHeads ? 0 : 180));
+
+  const modal = document.createElement('div');
+  modal.id = 'coinModal';
+  modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm';
+  modal.innerHTML = `
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 flex flex-col items-center gap-6 shadow-2xl max-w-xs w-full mx-4">
+      <p class="text-slate-400 text-sm tracking-widest uppercase">Tossing...</p>
+
+      <div id="coinWrapper" style="perspective: 600px;">
+        <div id="coinInner" style="
+          width: 120px; height: 120px;
+          position: relative;
+          transform-style: preserve-3d;
+          transition: transform 1.4s cubic-bezier(0.33,1,0.68,1);
+          transform: rotateY(0deg);
+        ">
+          <!-- Front: logo.png (tails) -->
+          <div style="
+            position: absolute; inset: 0;
+            backface-visibility: hidden;
+            border-radius: 50%; overflow: hidden;
+            border: 3px solid #38bdf8;
+            box-shadow: 0 0 20px rgba(56,189,248,0.3);
+          ">
+            <img src="logo.png" alt="Tails" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <!-- Back: logome.jpg (heads) rotated 180 so it shows on flip -->
+          <div style="
+            position: absolute; inset: 0;
+            backface-visibility: hidden;
+            border-radius: 50%; overflow: hidden;
+            border: 3px solid #facc15;
+            box-shadow: 0 0 20px rgba(250,204,21,0.3);
+            transform: rotateY(180deg);
+          ">
+            <img src="logome.jpg" alt="Heads" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+        </div>
+      </div>
+
+      <div id="coinResult" class="text-center opacity-0 transition-opacity duration-500">
+        <p class="text-3xl font-bold ${resultColor}">${result}!</p>
+        <p class="text-slate-400 text-sm mt-1">${isHeads ? '👤 Your face' : '🔷 Logo'}</p>
+      </div>
+
+      <button id="coinClose"
+        class="text-xs text-slate-500 hover:text-white transition-colors mt-2">
+        Click anywhere to dismiss
+      </button>
+    </div>`;
+
+  document.body.appendChild(modal);
+
+  // Start spin after a short delay so transition fires
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.getElementById('coinInner').style.transform = `rotateY(${finalAngle}deg)`;
+    });
+  });
+
+  // Show result after animation completes
+  setTimeout(() => {
+    const resultEl = document.getElementById('coinResult');
+    if (resultEl) resultEl.classList.replace('opacity-0', 'opacity-100');
+    const label = modal.querySelector('p.text-slate-400.text-sm.tracking-widest');
+    if (label) label.textContent = 'Result:';
+  }, 1500);
+
+  // Dismiss on click
+  modal.addEventListener('click', () => modal.remove());
 }
 
 function initCommandLine() {
@@ -656,6 +743,15 @@ function initCommandLine() {
         // Change logo back to logo.png
         const logoElements = document.querySelectorAll('img[src="logome.jpg"]');
         logoElements.forEach(img => img.src = 'logo.png');
+        commandLine.classList.add('hidden');
+        helpBubble.classList.add('hidden');
+        helpBubble.classList.remove('flex');
+        hiddenIcon.classList.remove('hidden');
+        commandInput.value = '';
+        helpIndex = -1;
+      } else if (command === 'toss coin') {
+        // Show coin toss modal
+        tossCoin();
         commandLine.classList.add('hidden');
         helpBubble.classList.add('hidden');
         helpBubble.classList.remove('flex');
