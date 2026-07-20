@@ -442,16 +442,31 @@ function buildHiddenUI(uiConfig) {
   // Help Bubble
   const helpBubble = document.createElement('div');
   helpBubble.id = 'helpBubble';
-  helpBubble.className = 'fixed bottom-16 left-4 bg-slate-800 border border-slate-700 rounded-lg p-4 hidden flex-col gap-2 shadow-lg text-slate-300 text-sm max-w-sm';
-  helpBubble.innerHTML = `
-    <div class="font-bold text-white mb-2">Available Commands:</div>
-    <div>- reset icon: Resets reaction counts</div>
-    <div>- reset visitor: Resets visitor stats</div>
-    <div>- stat full visitor: Shows detailed visitor stats</div>
-    <div>- show me: Changes logo to logome.jpg</div>
-    <div>- show you: Changes logo to logo.png</div>
-    <div>- help: Shows this help</div>
-  `;
+  helpBubble.className = 'fixed bottom-16 left-4 bg-slate-800 border border-slate-700 rounded-lg p-4 hidden flex-col gap-1 shadow-lg text-slate-300 text-sm max-w-sm';
+  
+  const helpTitle = document.createElement('div');
+  helpTitle.className = 'font-bold text-white mb-2';
+  helpTitle.textContent = 'Available Commands:';
+  helpBubble.appendChild(helpTitle);
+
+  const commandList = [
+    { cmd: 'reset icon', desc: 'Resets reaction counts' },
+    { cmd: 'reset visitor', desc: 'Resets visitor stats' },
+    { cmd: 'stat full visitor', desc: 'Shows detailed visitor stats' },
+    { cmd: 'show me', desc: 'Changes logo to logome.jpg' },
+    { cmd: 'show you', desc: 'Changes logo to logo.png' },
+    { cmd: 'help', desc: 'Shows this help' }
+  ];
+
+  commandList.forEach((item, index) => {
+    const cmdEl = document.createElement('div');
+    cmdEl.className = 'cursor-pointer px-2 py-1 rounded hover:bg-slate-700 transition-colors';
+    cmdEl.dataset.cmd = item.cmd;
+    cmdEl.dataset.index = index;
+    cmdEl.innerHTML = `<span class="text-brand font-semibold">${item.cmd}</span>: ${item.desc}`;
+    helpBubble.appendChild(cmdEl);
+  });
+  
   container.appendChild(helpBubble);
   
   // Command Line
@@ -494,6 +509,26 @@ function initCommandLine() {
   // Command history
   let commandHistory = JSON.parse(localStorage.getItem('commandHistory') || '[]');
   let historyIndex = -1;
+  let helpIndex = -1;
+  const helpCommandElements = () => helpBubble.querySelectorAll('[data-cmd]');
+
+  // Highlight command in help
+  const updateHelpHighlight = () => {
+    const elements = helpCommandElements();
+    elements.forEach((el, idx) => {
+      if (idx === helpIndex) {
+        el.classList.add('bg-slate-700');
+      } else {
+        el.classList.remove('bg-slate-700');
+      }
+    });
+  };
+
+  // Fill command input
+  const fillCommand = (cmd) => {
+    commandInput.value = cmd;
+    commandInput.focus();
+  };
 
   hiddenIcon.addEventListener('click', () => {
     hiddenIcon.classList.add('hidden');
@@ -501,7 +536,35 @@ function initCommandLine() {
     commandInput.focus();
   });
 
+  // Add click listeners to help command items
+  helpBubble.addEventListener('click', (e) => {
+    const cmdEl = e.target.closest('[data-cmd]');
+    if (cmdEl) {
+      fillCommand(cmdEl.dataset.cmd);
+    }
+  });
+
   commandInput.addEventListener('keydown', async (e) => {
+    const elements = helpCommandElements();
+    const isHelpVisible = !helpBubble.classList.contains('hidden');
+
+    if (isHelpVisible && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+      e.preventDefault();
+      if (e.key === 'ArrowUp') {
+        helpIndex = helpIndex > 0 ? helpIndex - 1 : elements.length - 1;
+      } else {
+        helpIndex = helpIndex < elements.length - 1 ? helpIndex + 1 : 0;
+      }
+      updateHelpHighlight();
+      return;
+    }
+
+    if (isHelpVisible && e.key === 'Enter' && helpIndex >= 0) {
+      e.preventDefault();
+      fillCommand(elements[helpIndex].dataset.cmd);
+      return;
+    }
+
     if (e.key === 'Enter') {
       const command = commandInput.value.trim().toLowerCase();
       
@@ -531,8 +594,11 @@ function initCommandLine() {
           await buildFooter(globalMeta);
         }
         commandLine.classList.add('hidden');
+        helpBubble.classList.add('hidden');
+        helpBubble.classList.remove('flex');
         hiddenIcon.classList.remove('hidden');
         commandInput.value = '';
+        helpIndex = -1;
       } else if (command === 'reset visitor') {
         // Reset visitor stats
         if (supabaseClient) {
@@ -544,33 +610,49 @@ function initCommandLine() {
         }
         localStorage.removeItem('visitorStats');
         commandLine.classList.add('hidden');
+        helpBubble.classList.add('hidden');
+        helpBubble.classList.remove('flex');
         hiddenIcon.classList.remove('hidden');
         commandInput.value = '';
+        helpIndex = -1;
       } else if (command === 'stat full visitor') {
         // Display visitor stats modal
         await displayVisitorStats();
         commandLine.classList.add('hidden');
+        helpBubble.classList.add('hidden');
+        helpBubble.classList.remove('flex');
         hiddenIcon.classList.remove('hidden');
         commandInput.value = '';
+        helpIndex = -1;
       } else if (command === 'show me') {
         // Change logo to logome.jpg
         const logoElements = document.querySelectorAll('img[src="logo.png"]');
         logoElements.forEach(img => img.src = 'logome.jpg');
         commandLine.classList.add('hidden');
+        helpBubble.classList.add('hidden');
+        helpBubble.classList.remove('flex');
         hiddenIcon.classList.remove('hidden');
         commandInput.value = '';
+        helpIndex = -1;
       } else if (command === 'show you') {
         // Change logo back to logo.png
         const logoElements = document.querySelectorAll('img[src="logome.jpg"]');
         logoElements.forEach(img => img.src = 'logo.png');
         commandLine.classList.add('hidden');
+        helpBubble.classList.add('hidden');
+        helpBubble.classList.remove('flex');
         hiddenIcon.classList.remove('hidden');
         commandInput.value = '';
+        helpIndex = -1;
       } else if (command === 'help') {
         // Toggle help bubble
         helpBubble.classList.toggle('hidden');
         if (!helpBubble.classList.contains('hidden')) {
           helpBubble.classList.add('flex');
+          helpIndex = 0;
+          updateHelpHighlight();
+        } else {
+          helpIndex = -1;
         }
         commandInput.value = '';
       } else {
@@ -607,6 +689,7 @@ function initCommandLine() {
       helpBubble.classList.remove('flex');
       hiddenIcon.classList.remove('hidden');
       commandInput.value = '';
+      helpIndex = -1;
     }
   });
 }
