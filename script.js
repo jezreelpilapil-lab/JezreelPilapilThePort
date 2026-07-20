@@ -829,17 +829,19 @@ function parseUserAgent() {
   let deviceType = 'Unknown';
   let os = 'Unknown';
 
-  // Detect Browser
+  // Detect Browser (order matters - check specific ones first)
   if (ua.includes('Firefox')) {
     browser = 'Firefox';
   } else if (ua.includes('Edg')) {
     browser = 'Edge';
-  } else if (ua.includes('Chrome')) {
-    browser = 'Chrome';
-  } else if (ua.includes('Safari') && !ua.includes('Chrome')) {
-    browser = 'Safari';
   } else if (ua.includes('Opera') || ua.includes('OPR')) {
     browser = 'Opera';
+  } else if (ua.includes('SamsungBrowser')) {
+    browser = 'Samsung Internet';
+  } else if (ua.includes('Chrome')) {
+    browser = 'Chrome';
+  } else if (ua.includes('Safari')) {
+    browser = 'Safari';
   } else if (ua.includes('MSIE') || ua.includes('Trident')) {
     browser = 'Internet Explorer';
   }
@@ -853,10 +855,10 @@ function parseUserAgent() {
     deviceType = 'Desktop';
   }
 
-  // Detect OS
+  // Detect OS (order matters)
   if (ua.includes('Windows')) {
     os = 'Windows';
-  } else if (ua.includes('Mac')) {
+  } else if (ua.includes('Mac OS')) {
     os = 'macOS';
   } else if (ua.includes('Linux')) {
     os = 'Linux';
@@ -866,6 +868,7 @@ function parseUserAgent() {
     os = 'iOS';
   }
 
+  console.log('Parsed UA:', { browser, deviceType, os, ua: ua.substring(0, 100) });
   return { browser, deviceType, os };
 }
 
@@ -881,19 +884,25 @@ async function trackVisitor() {
 
   try {
     // Fetch IP/ISP info using ip-api.com (free, no API key needed)
-    const ipRes = await fetch('http://ip-api.com/json/');
+    const ipRes = await fetch('https://ip-api.com/json/');
     const ipData = await ipRes.json();
-    visitData = {
-      timestamp: new Date().toISOString(),
-      ip: ipData.query || 'Unknown',
-      isp: ipData.isp || 'Unknown',
-      country: ipData.country || 'Unknown',
-      region: ipData.regionName || 'Unknown',
-      city: ipData.city || 'Unknown',
-      browser: uaData.browser,
-      device_type: uaData.deviceType,
-      os: uaData.os
-    };
+    console.log('IP API response:', ipData);
+
+    if (ipData.status === 'success') {
+      visitData = {
+        timestamp: new Date().toISOString(),
+        ip: ipData.query || 'Unknown',
+        isp: ipData.isp || 'Unknown',
+        country: ipData.country || 'Unknown',
+        region: ipData.regionName || 'Unknown',
+        city: ipData.city || 'Unknown',
+        browser: uaData.browser,
+        device_type: uaData.deviceType,
+        os: uaData.os
+      };
+    } else {
+      throw new Error(`IP API failed: ${ipData.message || 'Unknown error'}`);
+    }
   } catch (err) {
     console.error('Failed to fetch IP info:', err);
     // Fallback: basic data without IP/ISP
