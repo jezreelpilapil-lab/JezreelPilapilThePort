@@ -281,7 +281,7 @@
     }
   },
   "supabase": {
-    "url": "YOUR_SUPABASE_URL",
-    "anon_key": "YOUR_SUPABASE_ANON_KEY"
+    "url": "https://yobczuepdtlenjgvwdqy.supabase.co",
+    "anon_key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlvYmN6dWVwZHRsZW5qZ3Z3ZHF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1MjEyMjEsImV4cCI6MjEwMDA5NzIyMX0.OQivQw3E5-wHcYmD87VtZsCRItaluJNI9LLhVk6c5W8"
   }
 }
