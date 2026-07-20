@@ -284,10 +284,11 @@ function buildAwards(awards) {
 
 
 async function buildFooter(meta) {
-  // Initialize reaction counts from Supabase
+  // Initialize reaction counts and visitor count
   const reactionTypes = ['like', 'heart', 'laugh', 'surprise', 'sad', 'angry', 'dislike'];
   const reactionCounts = await fetchReactionCounts();
   const currentReaction = localStorage.getItem('currentReaction');
+  const visitorCount = await fetchVisitorCount();
 
   // Build reaction buttons HTML
   const reactionButtonsHTML = reactionTypes.map(type => {
@@ -352,9 +353,10 @@ async function buildFooter(meta) {
           <p class="mt-1 text-lightMuted dark:text-muted">${meta.location}</p>
         </div>
         <div class="flex items-center gap-6">
-          <a href="https://www.visitorbadge.io/" target="_blank" rel="noopener">
-            <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fjezreelpilapil-lab.github.io%2FJezreelPilapilThePort%2F&countColor=%2338bdf8" alt="Visitor Counter">
-          </a>
+          <div class="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-300 dark:border-slate-700 hover:border-brand transition-colors">
+            <span class="text-lg">👁️</span>
+            <span class="text-sm font-semibold text-lightMuted dark:text-slate-400">${visitorCount}</span>
+          </div>
           <div class="relative">
             <div class="reaction-summary flex items-center gap-2 px-4 py-2 rounded-full border border-slate-300 dark:border-slate-700 hover:border-brand transition-colors cursor-pointer">
               <div class="flex -space-x-1">
@@ -557,6 +559,27 @@ async function fetchReactionCounts() {
   });
   
   return counts;
+}
+
+async function fetchVisitorCount() {
+  if (!supabaseClient) {
+    // Fallback to localStorage
+    const stats = JSON.parse(localStorage.getItem('visitorStats') || '[]');
+    return stats.length;
+  }
+  
+  const { data, error, count } = await supabaseClient
+    .from('visitors')
+    .select('*', { count: 'exact', head: true });
+  
+  if (error) {
+    console.error('Error fetching visitor count:', error);
+    // Fallback to localStorage if there's an error
+    const stats = JSON.parse(localStorage.getItem('visitorStats') || '[]');
+    return stats.length;
+  }
+  
+  return count || 0;
 }
 
 async function handleReaction(newReaction) {
