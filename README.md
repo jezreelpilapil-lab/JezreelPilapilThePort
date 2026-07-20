@@ -43,7 +43,8 @@ The portfolio includes a hidden command line interface that can be accessed by c
 ### Available Commands:
 
 - **`reset icon`**: Resets all reaction counts and clears the current reaction.
-- **`reset visitor`**: (Note: Visitor counter is managed by an external service, so this command does not currently modify the counter.)
+- **`reset visitor`**: Resets locally stored visitor statistics.
+- **`stat full visitor`**: Displays a modal with detailed visitor statistics, including device type, browser, ISP, and recent visits.
 
 ### Error Handling:
 - If an unknown command is entered, a red error bubble saying "Bad or unknown command" will appear and fade out after 2 seconds.

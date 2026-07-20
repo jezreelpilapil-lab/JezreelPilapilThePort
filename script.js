@@ -478,8 +478,14 @@ function initCommandLine() {
         hiddenIcon.classList.remove('hidden');
         commandInput.value = '';
       } else if (command === 'reset visitor') {
-        // Visitor counter is from external API, so we can't reset it. Let's inform user? Or just do nothing?
-        // For now, let's just close the command line as a placeholder.
+        // Reset local visitor stats
+        localStorage.removeItem('visitorStats');
+        commandLine.classList.add('hidden');
+        hiddenIcon.classList.remove('hidden');
+        commandInput.value = '';
+      } else if (command === 'stat full visitor') {
+        // Display visitor stats modal
+        displayVisitorStats();
         commandLine.classList.add('hidden');
         hiddenIcon.classList.remove('hidden');
         commandInput.value = '';
@@ -538,6 +544,194 @@ function handleReaction(newReaction) {
   if (globalMeta) {
     buildFooter(globalMeta);
   }
+}
+
+// --- Visitor Tracking ---
+function parseUserAgent() {
+  const ua = navigator.userAgent;
+  let browser = 'Unknown';
+  let deviceType = 'Unknown';
+  let os = 'Unknown';
+
+  // Detect Browser
+  if (ua.includes('Firefox')) {
+    browser = 'Firefox';
+  } else if (ua.includes('Edg')) {
+    browser = 'Edge';
+  } else if (ua.includes('Chrome')) {
+    browser = 'Chrome';
+  } else if (ua.includes('Safari') && !ua.includes('Chrome')) {
+    browser = 'Safari';
+  } else if (ua.includes('Opera') || ua.includes('OPR')) {
+    browser = 'Opera';
+  } else if (ua.includes('MSIE') || ua.includes('Trident')) {
+    browser = 'Internet Explorer';
+  }
+
+  // Detect Device Type
+  if (ua.includes('Mobile')) {
+    deviceType = 'Mobile';
+  } else if (ua.includes('Tablet')) {
+    deviceType = 'Tablet';
+  } else {
+    deviceType = 'Desktop';
+  }
+
+  // Detect OS
+  if (ua.includes('Windows')) {
+    os = 'Windows';
+  } else if (ua.includes('Mac')) {
+    os = 'macOS';
+  } else if (ua.includes('Linux')) {
+    os = 'Linux';
+  } else if (ua.includes('Android')) {
+    os = 'Android';
+  } else if (ua.includes('iPhone') || ua.includes('iPad') || ua.includes('iPod')) {
+    os = 'iOS';
+  }
+
+  return { browser, deviceType, os };
+}
+
+async function trackVisitor() {
+  try {
+    // Fetch IP/ISP info using ip-api.com (free, no API key needed)
+    const ipRes = await fetch('http://ip-api.com/json/');
+    const ipData = await ipRes.json();
+    const uaData = parseUserAgent();
+    const timestamp = new Date().toISOString();
+
+    const visitData = {
+      timestamp,
+      ip: ipData.query || 'Unknown',
+      isp: ipData.isp || 'Unknown',
+      country: ipData.country || 'Unknown',
+      region: ipData.regionName || 'Unknown',
+      city: ipData.city || 'Unknown',
+      browser: uaData.browser,
+      deviceType: uaData.deviceType,
+      os: uaData.os
+    };
+
+    // Store in localStorage
+    const existingVisits = JSON.parse(localStorage.getItem('visitorStats') || '[]');
+    existingVisits.push(visitData);
+    localStorage.setItem('visitorStats', JSON.stringify(existingVisits));
+  } catch (err) {
+    console.error('Failed to track visitor:', err);
+    // Fallback: store basic UA data without IP/ISP
+    const uaData = parseUserAgent();
+    const timestamp = new Date().toISOString();
+    const visitData = {
+      timestamp,
+      ip: 'Unknown',
+      isp: 'Unknown',
+      country: 'Unknown',
+      region: 'Unknown',
+      city: 'Unknown',
+      browser: uaData.browser,
+      deviceType: uaData.deviceType,
+      os: uaData.os
+    };
+    const existingVisits = JSON.parse(localStorage.getItem('visitorStats') || '[]');
+    existingVisits.push(visitData);
+    localStorage.setItem('visitorStats', JSON.stringify(existingVisits));
+  }
+}
+
+function displayVisitorStats() {
+  // Create a modal to display stats
+  const stats = JSON.parse(localStorage.getItem('visitorStats') || '[]');
+  
+  // Calculate aggregated stats
+  const deviceCounts = {};
+  const browserCounts = {};
+  const ispCounts = {};
+  
+  stats.forEach(visit => {
+    // Device Type
+    deviceCounts[visit.deviceType] = (deviceCounts[visit.deviceType] || 0) + 1;
+    // Browser
+    browserCounts[visit.browser] = (browserCounts[visit.browser] || 0) + 1;
+    // ISP
+    ispCounts[visit.isp] = (ispCounts[visit.isp] || 0) + 1;
+  });
+
+  // Build modal HTML
+  const modalId = 'visitorStatsModal';
+  const modal = document.createElement('div');
+  modal.id = modalId;
+  modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden';
+  
+  const modalContent = document.createElement('div');
+  modalContent.className = 'bg-light dark:bg-dark rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-slate-200 dark:border-slate-700';
+  
+  modalContent.innerHTML = `
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-slate-900 dark:text-white text-2xl font-bold">Visitor Statistics</h2>
+      <button id="closeStatsModal" class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 text-2xl">&times;</button>
+    </div>
+    
+    <div class="space-y-4">
+      <div>
+        <h3 class="text-slate-800 dark:text-slate-200 font-semibold mb-2">Total Visits: ${stats.length}</h3>
+      </div>
+      
+      <div class="bg-lightCard dark:bg-card rounded-lg p-4 border border-slate-200 dark:border-slate-700">
+        <h4 class="text-slate-800 dark:text-slate-200 font-semibold mb-3">Device Types</h4>
+        <ul class="text-slate-700 dark:text-slate-300 space-y-1">
+          ${Object.entries(deviceCounts).map(([device, count]) => `<li>${device}: ${count} visit${count !== 1 ? 's' : ''}</li>`).join('')}
+        </ul>
+      </div>
+      
+      <div class="bg-lightCard dark:bg-card rounded-lg p-4 border border-slate-200 dark:border-slate-700">
+        <h4 class="text-slate-800 dark:text-slate-200 font-semibold mb-3">Browsers</h4>
+        <ul class="text-slate-700 dark:text-slate-300 space-y-1">
+          ${Object.entries(browserCounts).map(([browser, count]) => `<li>${browser}: ${count} visit${count !== 1 ? 's' : ''}</li>`).join('')}
+        </ul>
+      </div>
+      
+      <div class="bg-lightCard dark:bg-card rounded-lg p-4 border border-slate-200 dark:border-slate-700">
+        <h4 class="text-slate-800 dark:text-slate-200 font-semibold mb-3">ISPs</h4>
+        <ul class="text-slate-700 dark:text-slate-300 space-y-1">
+          ${Object.entries(ispCounts).map(([isp, count]) => `<li>${isp}: ${count} visit${count !== 1 ? 's' : ''}</li>`).join('')}
+        </ul>
+      </div>
+      
+      <div class="bg-lightCard dark:bg-card rounded-lg p-4 border border-slate-200 dark:border-slate-700">
+        <h4 class="text-slate-800 dark:text-slate-200 font-semibold mb-3">Recent Visits (Last 10)</h4>
+        <ul class="text-slate-700 dark:text-slate-300 space-y-2">
+          ${stats.slice(-10).reverse().map(visit => `
+            <li class="border-b border-slate-200 dark:border-slate-700 pb-2">
+              <div class="text-xs text-slate-500 dark:text-slate-400">${new Date(visit.timestamp).toLocaleString()}</div>
+              <div>${visit.deviceType} · ${visit.browser} · ${visit.os}</div>
+              <div class="text-xs">${visit.ip} · ${visit.isp} · ${visit.city}, ${visit.region}, ${visit.country}</div>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    </div>
+  `;
+
+  modal.appendChild(modalContent);
+  document.body.appendChild(modal);
+
+  // Close button
+  document.getElementById('closeStatsModal').addEventListener('click', () => {
+    modal.classList.add('hidden');
+    modal.remove();
+  });
+
+  // Close when clicking outside
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.add('hidden');
+      modal.remove();
+    }
+  });
+
+  // Show modal
+  modal.classList.remove('hidden');
 }
 
 // ─── Scroll animation (Intersection Observer) ────────────────────────────────
@@ -610,6 +804,9 @@ async function init() {
     initScrollReveal();
     initContactForm();
     initCommandLine();
+    
+    // Track current visitor
+    trackVisitor();
 
     document.title = `${data.meta.name} | Portfolio`;
 
