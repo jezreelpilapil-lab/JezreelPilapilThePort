@@ -304,22 +304,24 @@ function buildFooter(meta) {
       dislike: '👎'
     }[type];
     const color = {
-      like: 'text-blue-500 border-blue-500',
-      heart: 'text-red-500 border-red-500',
-      laugh: 'text-yellow-500 border-yellow-500',
-      surprise: 'text-yellow-400 border-yellow-400',
-      sad: 'text-blue-400 border-blue-400',
-      angry: 'text-orange-500 border-orange-500',
-      dislike: 'text-red-600 border-red-600'
+      like: 'text-blue-500 border-blue-500 bg-blue-100 dark:bg-blue-900/30',
+      heart: 'text-red-500 border-red-500 bg-red-100 dark:bg-red-900/30',
+      laugh: 'text-yellow-500 border-yellow-500 bg-yellow-100 dark:bg-yellow-900/30',
+      surprise: 'text-yellow-400 border-yellow-400 bg-yellow-100 dark:bg-yellow-900/30',
+      sad: 'text-blue-400 border-blue-400 bg-blue-100 dark:bg-blue-900/30',
+      angry: 'text-orange-500 border-orange-500 bg-orange-100 dark:bg-orange-900/30',
+      dislike: 'text-red-600 border-red-600 bg-red-100 dark:bg-red-900/30'
     }[type];
     const isActive = currentReaction === type;
+    const count = reactionCounts[type];
     
     return `
       <button 
-        class="reaction-btn px-2 py-1 rounded-full border border-slate-700 dark:border-slate-700 border-slate-300 hover:border-brand transition-colors text-lg ${isActive ? color : ''}"
+        class="reaction-btn px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 hover:border-brand transition-colors text-lg flex items-center gap-1 ${isActive ? color : ''}"
         data-reaction="${type}"
       >
         ${emoji}
+        <span class="text-xs font-semibold">${count}</span>
       </button>
     `;
   }).join('');
@@ -341,7 +343,8 @@ function buildFooter(meta) {
       angry: '😠',
       dislike: '👎'
     }[type];
-    return `<span class="text-lg">${emoji}</span>`;
+    const count = reactionCounts[type];
+    return `<span class="text-lg flex items-center gap-0.5">${emoji}<span class="text-xs font-semibold">${count}</span></span>`;
   }).join('');
 
   document.getElementById('footer').innerHTML = `
@@ -362,7 +365,7 @@ function buildFooter(meta) {
               </div>
               <span class="text-sm text-lightMuted dark:text-slate-400">${totalReactions}</span>
             </div>
-            <div class="reaction-menu absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden flex gap-1 bg-white dark:bg-slate-800 rounded-full p-1 shadow-lg border border-slate-200 dark:border-slate-700">
+            <div class="reaction-menu absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden flex flex-wrap gap-1 bg-white dark:bg-slate-800 rounded-2xl p-2 shadow-lg border border-slate-200 dark:border-slate-700">
               ${reactionButtonsHTML}
             </div>
           </div>
@@ -699,9 +702,9 @@ function displayVisitorStats() {
       </div>
       
       <div class="bg-lightCard dark:bg-card rounded-lg p-4 border border-slate-200 dark:border-slate-700">
-        <h4 class="text-slate-800 dark:text-slate-200 font-semibold mb-3">Recent Visits (Last 10)</h4>
+        <h4 class="text-slate-800 dark:text-slate-200 font-semibold mb-3">All Visits</h4>
         <ul class="text-slate-700 dark:text-slate-300 space-y-2">
-          ${stats.slice(-10).reverse().map(visit => `
+          ${stats.slice().reverse().map(visit => `
             <li class="border-b border-slate-200 dark:border-slate-700 pb-2">
               <div class="text-xs text-slate-500 dark:text-slate-400">${new Date(visit.timestamp).toLocaleString()}</div>
               <div>${visit.deviceType} · ${visit.browser} · ${visit.os}</div>
