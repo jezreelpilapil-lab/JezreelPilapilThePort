@@ -19,7 +19,7 @@ const icon = (name, extra = '') =>
   `<span class="text-brand ${extra}">${ICONS[name] ?? ''}</span>`;
 
 const section = (id, content) => `
-  <section id="${id}" class="py-20 px-4 bg-dark bg-light dark:bg-dark transition-colors duration-300">
+  <section id="${id}" class="py-20 px-4 bg-dark dark:bg-dark bg-light transition-colors duration-300">
     <div class="max-w-5xl mx-auto">${content}</div>
   </section>`;
 
@@ -85,7 +85,7 @@ function buildNav(meta) {
 // ─── Hero builder ────────────────────────────────────────────────────────────
 function buildHero(meta) {
   return `
-    <section id="hero" class="min-h-screen flex items-center justify-center px-4 pt-16 bg-dark bg-light dark:bg-dark transition-colors duration-300">
+    <section id="hero" class="min-h-screen flex items-center justify-center px-4 pt-16 bg-dark dark:bg-dark bg-light transition-colors duration-300">
       <div class="max-w-3xl text-center">
         <img src="logo.png" alt="JAP Logo" class="w-32 h-32 mx-auto mb-6 rounded-full object-cover">
         <p class="text-brand text-sm font-semibold tracking-widest uppercase mb-4">Portfolio</p>
@@ -93,9 +93,9 @@ function buildHero(meta) {
         <p class="text-xl text-muted dark:text-muted text-lightMuted mb-8">${meta.tagline}</p>
         <div class="flex flex-wrap justify-center gap-4 mb-10 text-sm text-slate-400 dark:text-slate-400 text-slate-600">
           <span>${meta.location}</span>
-          <span class="text-slate-600 dark:text-slate-600 text-slate-300">|</span>
+          <span class="text-slate-500 dark:text-slate-600">|</span>
           <a href="mailto:${meta.email}" class="hover:text-brand transition-colors">${meta.email}</a>
-          <span class="text-slate-600 dark:text-slate-600 text-slate-300">|</span>
+          <span class="text-slate-500 dark:text-slate-600">|</span>
           <span>${meta.phone}</span>
         </div>
         <div class="flex flex-wrap justify-center gap-3">
