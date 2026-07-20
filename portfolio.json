@@ -278,5 +278,9 @@
       "class": "fixed bottom-20 left-4 bg-red-500/90 text-white px-4 py-2 rounded-lg shadow-lg hidden",
       "message": "Bad or unknown command"
     }
+  },
+  "supabase": {
+    "url": "YOUR_SUPABASE_URL",
+    "anon_key": "YOUR_SUPABASE_ANON_KEY"
   }
 }

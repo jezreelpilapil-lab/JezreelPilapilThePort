@@ -908,6 +908,7 @@ function initContactForm() {
 
 // ─── Global variable to store meta data ───────────────────────────────────────
 let globalMeta = null;
+let supabaseClient = null;
 
 // ─── Main bootstrap ───────────────────────────────────────────────────────────
 async function init() {
@@ -917,6 +918,13 @@ async function init() {
     const data = await res.json();
 
     globalMeta = data.meta;
+
+    // Initialize Supabase if configured
+    if (data.supabase && data.supabase.url && data.supabase.url !== "YOUR_SUPABASE_URL" && data.supabase.anon_key && data.supabase.anon_key !== "YOUR_SUPABASE_ANON_KEY") {
+      supabaseClient = window.supabase.createClient(data.supabase.url, data.supabase.anon_key);
+    } else {
+      console.warn("Supabase not configured: falling back to localStorage");
+    }
     buildNav(data.meta);
 
     document.getElementById('app').innerHTML = [
