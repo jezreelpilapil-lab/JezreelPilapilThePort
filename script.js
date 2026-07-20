@@ -587,6 +587,10 @@ function tossCoin() {
       <button id="coinClose" class="text-xs text-slate-500 hover:text-white transition-colors">
         Click anywhere to dismiss
       </button>
+      <button id="coinAgain"
+        class="text-xs px-5 py-2 rounded-full bg-brand text-dark font-semibold hover:brightness-110 transition">
+        Again
+      </button>
     </div>`;
 
   document.body.appendChild(modal);
@@ -610,18 +614,27 @@ function tossCoin() {
     if (useBtn) {
       useBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        // Swap all logo images to the winning face
         document.querySelectorAll('img[src="logo.png"], img[src="logome.jpg"]').forEach(img => {
           img.src = resultImg;
         });
         modal.remove();
       });
     }
+
+    // Wire up "Again" button
+    const againBtn = document.getElementById('coinAgain');
+    if (againBtn) {
+      againBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        modal.remove();
+        tossCoin();
+      });
+    }
   }, 1500);
 
-  // Dismiss on click (but not on the "use as logo" button)
+  // Dismiss on click (but not on the "use as logo" or "again" buttons)
   modal.addEventListener('click', (e) => {
-    if (e.target.id !== 'useAsLogo') modal.remove();
+    if (e.target.id !== 'useAsLogo' && e.target.id !== 'coinAgain') modal.remove();
   });
 }
 
