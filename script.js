@@ -75,6 +75,10 @@ function buildNav(meta) {
              class="text-xs border border-brand text-brand font-semibold px-3 py-2 rounded-full hover:bg-brand hover:text-dark transition">
             Short Resume
           </a>
+          <a href="${meta.resume_compact}" download
+             class="text-xs border border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-semibold px-3 py-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition">
+            Compact Resume
+          </a>
         </div>
       </div>
     </header>`;
@@ -133,6 +137,10 @@ function buildHero(meta) {
           <a href="${meta.resume_short}" download
              class="border border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-semibold px-6 py-3 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition">
             Download Short Resume
+          </a>
+          <a href="${meta.resume_compact}" download
+             class="border border-slate-600 dark:border-slate-500 text-slate-800 dark:text-slate-200 font-semibold px-6 py-3 rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition">
+            Download Compact Resume
           </a>
         </div>
         <div class="flex justify-center gap-5 mt-8">
