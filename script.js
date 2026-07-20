@@ -465,8 +465,17 @@ function initCommandLine() {
       const command = commandInput.value.trim().toLowerCase();
       
       if (command === 'reset icon') {
-        // Reset reaction counters in Supabase and localStorage
-        await supabase.from('reactions').delete().neq('id', 0); // Delete all reactions
+        // Reset reaction counters
+        if (supabase) {
+          try {
+            await supabase.from('reactions').delete().neq('id', 0);
+          } catch (err) {
+            console.error('Error resetting reactions in Supabase:', err);
+          }
+        }
+        // Reset localStorage
+        const reactionTypes = ['like', 'heart', 'laugh', 'surprise', 'sad', 'angry', 'dislike'];
+        reactionTypes.forEach(type => localStorage.removeItem(`${type}Count`));
         localStorage.removeItem('currentReaction');
         if (globalMeta) {
           await buildFooter(globalMeta);
@@ -475,8 +484,15 @@ function initCommandLine() {
         hiddenIcon.classList.remove('hidden');
         commandInput.value = '';
       } else if (command === 'reset visitor') {
-        // Reset visitor stats in Supabase
-        await supabase.from('visitors').delete().neq('id', 0); // Delete all visitors
+        // Reset visitor stats
+        if (supabase) {
+          try {
+            await supabase.from('visitors').delete().neq('id', 0);
+          } catch (err) {
+            console.error('Error resetting visitors in Supabase:', err);
+          }
+        }
+        localStorage.removeItem('visitorStats');
         commandLine.classList.add('hidden');
         hiddenIcon.classList.remove('hidden');
         commandInput.value = '';
@@ -508,12 +524,28 @@ function initCommandLine() {
 }
 
 async function fetchReactionCounts() {
+  if (!supabase) {
+    // Fallback to localStorage
+    const reactionTypes = ['like', 'heart', 'laugh', 'surprise', 'sad', 'angry', 'dislike'];
+    const counts = {};
+    reactionTypes.forEach(type => {
+      counts[type] = parseInt(localStorage.getItem(`${type}Count`) || '0');
+    });
+    return counts;
+  }
+  
   const { data, error } = await supabase
     .from('reactions')
     .select('reaction_type');
   if (error) {
     console.error('Error fetching reactions:', error);
-    return {};
+    // Fallback to localStorage if there's an error
+    const reactionTypes = ['like', 'heart', 'laugh', 'surprise', 'sad', 'angry', 'dislike'];
+    const counts = {};
+    reactionTypes.forEach(type => {
+      counts[type] = parseInt(localStorage.getItem(`${type}Count`) || '0');
+    });
+    return counts;
   }
   
   const counts = {};
@@ -530,6 +562,29 @@ async function fetchReactionCounts() {
 async function handleReaction(newReaction) {
   const oldReaction = localStorage.getItem('currentReaction');
 
+  if (!supabase) {
+    // Fallback to localStorage
+    if (oldReaction === newReaction) {
+      const oldCount = parseInt(localStorage.getItem(`${oldReaction}Count`) || '0');
+      if (oldCount > 0) localStorage.setItem(`${oldReaction}Count`, oldCount - 1);
+      localStorage.removeItem('currentReaction');
+    } else {
+      if (oldReaction) {
+        const oldCount = parseInt(localStorage.getItem(`${oldReaction}Count`) || '0');
+        if (oldCount > 0) localStorage.setItem(`${oldReaction}Count`, oldCount - 1);
+      }
+      if (newReaction) {
+        const newCount = parseInt(localStorage.getItem(`${newReaction}Count`) || '0');
+        localStorage.setItem(`${newReaction}Count`, newCount + 1);
+        localStorage.setItem('currentReaction', newReaction);
+      } else {
+        localStorage.removeItem('currentReaction');
+      }
+    }
+    if (globalMeta) buildFooter(globalMeta);
+    return;
+  }
+
   // If clicking the same reaction, remove it
   if (oldReaction === newReaction) {
     // Get the last reaction of this type to delete
@@ -539,7 +594,7 @@ async function handleReaction(newReaction) {
       .eq('reaction_type', oldReaction)
       .order('created_at', { ascending: false })
       .limit(1);
-      
+    
     if (reactions && reactions.length > 0) {
       await supabase.from('reactions').delete().eq('id', reactions[0].id);
     }
@@ -554,7 +609,7 @@ async function handleReaction(newReaction) {
         .eq('reaction_type', oldReaction)
         .order('created_at', { ascending: false })
         .limit(1);
-        
+      
       if (reactions && reactions.length > 0) {
         await supabase.from('reactions').delete().eq('id', reactions[0].id);
       }
@@ -623,13 +678,15 @@ function parseUserAgent() {
 }
 
 async function trackVisitor() {
+  const uaData = parseUserAgent();
+  let visitData;
+
   try {
     // Fetch IP/ISP info using ip-api.com (free, no API key needed)
     const ipRes = await fetch('http://ip-api.com/json/');
     const ipData = await ipRes.json();
-    const uaData = parseUserAgent();
-
-    const visitData = {
+    visitData = {
+      timestamp: new Date().toISOString(),
       ip: ipData.query || 'Unknown',
       isp: ipData.isp || 'Unknown',
       country: ipData.country || 'Unknown',
@@ -639,14 +696,11 @@ async function trackVisitor() {
       device_type: uaData.deviceType,
       os: uaData.os
     };
-
-    // Store in Supabase
-    await supabase.from('visitors').insert(visitData);
   } catch (err) {
-    console.error('Failed to track visitor:', err);
-    // Fallback: store basic UA data without IP/ISP
-    const uaData = parseUserAgent();
-    const visitData = {
+    console.error('Failed to fetch IP info:', err);
+    // Fallback: basic data without IP/ISP
+    visitData = {
+      timestamp: new Date().toISOString(),
       ip: 'Unknown',
       isp: 'Unknown',
       country: 'Unknown',
@@ -656,16 +710,45 @@ async function trackVisitor() {
       device_type: uaData.deviceType,
       os: uaData.os
     };
-    await supabase.from('visitors').insert(visitData);
+  }
+
+  if (supabase) {
+    try {
+      await supabase.from('visitors').insert(visitData);
+    } catch (err) {
+      console.error('Failed to send to Supabase, falling back to localStorage:', err);
+      // Fallback to localStorage
+      const existingVisits = JSON.parse(localStorage.getItem('visitorStats') || '[]');
+      existingVisits.push(visitData);
+      localStorage.setItem('visitorStats', JSON.stringify(existingVisits));
+    }
+  } else {
+    // Fallback to localStorage
+    const existingVisits = JSON.parse(localStorage.getItem('visitorStats') || '[]');
+    existingVisits.push(visitData);
+    localStorage.setItem('visitorStats', JSON.stringify(existingVisits));
   }
 }
 
 async function displayVisitorStats() {
-  // Create a modal to display stats
-  const { data: stats, error } = await supabase.from('visitors').select('*').order('created_at', { ascending: false });
-  if (error) {
-    console.error('Error fetching visitors:', error);
-    return;
+  let stats;
+  if (supabase) {
+    try {
+      const { data, error } = await supabase.from('visitors').select('*').order('created_at', { ascending: false });
+      if (error) {
+        console.error('Error fetching from Supabase, falling back to localStorage:', error);
+        // Fallback to localStorage
+        stats = JSON.parse(localStorage.getItem('visitorStats') || '[]');
+      } else {
+        stats = data.map(visit => ({ ...visit, timestamp: visit.created_at }));
+      }
+    } catch (err) {
+      console.error('Error fetching visitors, falling back to localStorage:', err);
+      stats = JSON.parse(localStorage.getItem('visitorStats') || '[]');
+    }
+  } else {
+    // Fallback to localStorage
+    stats = JSON.parse(localStorage.getItem('visitorStats') || '[]');
   }
   
   // Calculate aggregated stats
@@ -726,9 +809,9 @@ async function displayVisitorStats() {
       <div class="bg-lightCard dark:bg-card rounded-lg p-4 border border-slate-200 dark:border-slate-700">
         <h4 class="text-slate-800 dark:text-slate-200 font-semibold mb-3">All Visits</h4>
         <ul class="text-slate-700 dark:text-slate-300 space-y-2">
-          ${stats.map(visit => `
+          ${stats.slice().reverse().map(visit => `
             <li class="border-b border-slate-200 dark:border-slate-700 pb-2">
-              <div class="text-xs text-slate-500 dark:text-slate-400">${new Date(visit.created_at).toLocaleString()}</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400">${new Date(visit.timestamp || visit.created_at).toLocaleString()}</div>
               <div>${visit.device_type} · ${visit.browser} · ${visit.os}</div>
               <div class="text-xs">${visit.ip} · ${visit.isp} · ${visit.city}, ${visit.region}, ${visit.country}</div>
             </li>
