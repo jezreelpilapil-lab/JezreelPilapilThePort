@@ -466,9 +466,9 @@ function initCommandLine() {
       
       if (command === 'reset icon') {
         // Reset reaction counters
-        if (supabase) {
+        if (supabaseClient) {
           try {
-            await supabase.from('reactions').delete().neq('id', 0);
+            await supabaseClient.from('reactions').delete().neq('id', 0);
           } catch (err) {
             console.error('Error resetting reactions in Supabase:', err);
           }
@@ -485,9 +485,9 @@ function initCommandLine() {
         commandInput.value = '';
       } else if (command === 'reset visitor') {
         // Reset visitor stats
-        if (supabase) {
+        if (supabaseClient) {
           try {
-            await supabase.from('visitors').delete().neq('id', 0);
+            await supabaseClient.from('visitors').delete().neq('id', 0);
           } catch (err) {
             console.error('Error resetting visitors in Supabase:', err);
           }
@@ -524,7 +524,7 @@ function initCommandLine() {
 }
 
 async function fetchReactionCounts() {
-  if (!supabase) {
+  if (!supabaseClient) {
     // Fallback to localStorage
     const reactionTypes = ['like', 'heart', 'laugh', 'surprise', 'sad', 'angry', 'dislike'];
     const counts = {};
@@ -534,7 +534,7 @@ async function fetchReactionCounts() {
     return counts;
   }
   
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('reactions')
     .select('reaction_type');
   if (error) {
@@ -562,7 +562,7 @@ async function fetchReactionCounts() {
 async function handleReaction(newReaction) {
   const oldReaction = localStorage.getItem('currentReaction');
 
-  if (!supabase) {
+  if (!supabaseClient) {
     // Fallback to localStorage
     if (oldReaction === newReaction) {
       const oldCount = parseInt(localStorage.getItem(`${oldReaction}Count`) || '0');
@@ -588,7 +588,7 @@ async function handleReaction(newReaction) {
   // If clicking the same reaction, remove it
   if (oldReaction === newReaction) {
     // Get the last reaction of this type to delete
-    const { data: reactions } = await supabase
+    const { data: reactions } = await supabaseClient
       .from('reactions')
       .select('id')
       .eq('reaction_type', oldReaction)
@@ -596,14 +596,14 @@ async function handleReaction(newReaction) {
       .limit(1);
     
     if (reactions && reactions.length > 0) {
-      await supabase.from('reactions').delete().eq('id', reactions[0].id);
+      await supabaseClient.from('reactions').delete().eq('id', reactions[0].id);
     }
     
     localStorage.removeItem('currentReaction');
   } else {
     // Remove old reaction if exists
     if (oldReaction) {
-      const { data: reactions } = await supabase
+      const { data: reactions } = await supabaseClient
         .from('reactions')
         .select('id')
         .eq('reaction_type', oldReaction)
@@ -611,13 +611,13 @@ async function handleReaction(newReaction) {
         .limit(1);
       
       if (reactions && reactions.length > 0) {
-        await supabase.from('reactions').delete().eq('id', reactions[0].id);
+        await supabaseClient.from('reactions').delete().eq('id', reactions[0].id);
       }
     }
 
     // Add new reaction if not null
     if (newReaction) {
-      await supabase.from('reactions').insert({ reaction_type: newReaction });
+      await supabaseClient.from('reactions').insert({ reaction_type: newReaction });
       localStorage.setItem('currentReaction', newReaction);
     } else {
       localStorage.removeItem('currentReaction');
@@ -712,9 +712,9 @@ async function trackVisitor() {
     };
   }
 
-  if (supabase) {
+  if (supabaseClient) {
     try {
-      await supabase.from('visitors').insert(visitData);
+      await supabaseClient.from('visitors').insert(visitData);
     } catch (err) {
       console.error('Failed to send to Supabase, falling back to localStorage:', err);
       // Fallback to localStorage
@@ -732,9 +732,9 @@ async function trackVisitor() {
 
 async function displayVisitorStats() {
   let stats;
-  if (supabase) {
+  if (supabaseClient) {
     try {
-      const { data, error } = await supabase.from('visitors').select('*').order('created_at', { ascending: false });
+      const { data, error } = await supabaseClient.from('visitors').select('*').order('created_at', { ascending: false });
       if (error) {
         console.error('Error fetching from Supabase, falling back to localStorage:', error);
         // Fallback to localStorage
