@@ -169,9 +169,9 @@ function buildAbout(about) {
           ['6+', 'Android & Web Apps'],
           ['∞', 'Problems Solved']
         ].map(([n, l]) => `
-          <div class="bg-card dark:bg-card bg-lightCard rounded-xl p-5 text-center border border-slate-700 dark:border-slate-700 border-slate-200 transition-colors duration-300">
+          <div class="bg-lightCard dark:bg-card rounded-xl p-5 text-center border border-slate-200 dark:border-slate-700 transition-colors duration-300">      
             <div class="text-3xl font-bold text-brand">${n}</div>
-            <div class="text-xs text-muted dark:text-muted text-lightMuted mt-1">${l}</div>
+            <div class="text-xs text-lightMuted dark:text-muted mt-1">${l}</div>
           </div>`).join('')}
       </div>
     </div>`);
@@ -446,7 +446,7 @@ function buildHiddenUI(uiConfig) {
   // Hidden Icon
   const hiddenIcon = document.createElement('div');
   hiddenIcon.id = uiConfig.hidden_icon.id;
-  hiddenIcon.className = uiConfig.hidden_icon.class;
+  hiddenIcon.className = uiConfig.hidden_icon.class.replace('opacity-0', 'opacity-30 hover:opacity-100');
   hiddenIcon.textContent = uiConfig.hidden_icon.content;
   container.appendChild(hiddenIcon);
   
