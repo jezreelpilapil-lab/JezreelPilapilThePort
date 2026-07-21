@@ -446,7 +446,7 @@ function buildHiddenUI(uiConfig) {
   // Hidden Icon
   const hiddenIcon = document.createElement('div');
   hiddenIcon.id = uiConfig.hidden_icon.id;
-  hiddenIcon.className = uiConfig.hidden_icon.class.replace('opacity-0', 'opacity-30 hover:opacity-100');
+  hiddenIcon.className = uiConfig.hidden_icon.class;
   hiddenIcon.textContent = uiConfig.hidden_icon.content;
   container.appendChild(hiddenIcon);
   
