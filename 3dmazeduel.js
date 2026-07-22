@@ -429,8 +429,8 @@ function showWin(p){
       <div class="text-3xl font-bold mb-2" style="color:#${p.color.toString(16).padStart(6,'0')}">${p.name} Wins!</div>
       <div class="text-slate-400 mb-6">Reached the exit in ${((performance.now()-startTime)/1000).toFixed(1)}s</div>
       <div class="flex gap-3 justify-center">
-        <button onclick="MazeDuel.restart()" class="px-6 py-2 bg-brand text-dark font-bold rounded-full hover:brightness-110">Play Again</button>
-        <button onclick="MazeDuel.close()" class="px-6 py-2 border border-slate-600 text-slate-300 rounded-full hover:border-white">Exit</button>
+        <button onclick="window.MazeDuel.restart()" class="px-6 py-2 bg-brand text-dark font-bold rounded-full hover:brightness-110">Play Again</button>
+        <button onclick="window.MazeDuel.close()" class="px-6 py-2 border border-slate-600 text-slate-300 rounded-full hover:border-white">Exit</button>
       </div>
     </div>`;
   winEl.classList.remove('hidden');
@@ -567,7 +567,7 @@ function buildUI(){
   setupEl.querySelector('#p2smartrow').style.opacity='0.3';
 
   setupEl.querySelector('#mazeStart').onclick = startFromSetup;
-  setupEl.querySelector('#mazeClose').onclick = close;
+  setupEl.querySelector('#mazeClose').onclick = closeDuel;
 }
 
 function startFromSetup(){
@@ -635,7 +635,7 @@ function restart(){
   state='setup';
 }
 
-function close(){
+function closeDuel(){
   cancelAnimationFrame(animFrame);
   if(renderer3){ renderer3.dispose(); renderer3=null; }
   document.removeEventListener('keydown',onKey);
@@ -645,7 +645,7 @@ function close(){
   state='setup';
 }
 
-return { launch, restart, close };
+return { launch, restart, close: closeDuel };
 })();
 
 window.MazeDuel = MazeDuel;
