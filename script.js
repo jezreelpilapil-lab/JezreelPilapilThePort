@@ -467,6 +467,7 @@ function buildHiddenUI(uiConfig) {
     { cmd: 'show me', desc: 'Changes logo to logome.jpg' },
     { cmd: 'show you', desc: 'Changes logo to logo.png' },
     { cmd: 'toss coin', desc: 'Flip a coin — heads or tails!' },
+    { cmd: '3dmazeduel', desc: 'Launch the 3D split-screen maze game' },
     { cmd: 'help', desc: 'Shows this help' }
   ];
 
@@ -785,8 +786,15 @@ function initCommandLine() {
         hiddenIcon.classList.remove('hidden');
         commandInput.value = '';
         helpIndex = -1;
-      } else if (command === 'toss coin') {
-        // Show coin toss modal
+      } else if (command === '3dmazeduel') {
+        if(window.MazeDuel) window.MazeDuel.launch();
+        commandLine.classList.add('hidden');
+        helpBubble.classList.add('hidden');
+        helpBubble.classList.remove('flex');
+        hiddenIcon.classList.remove('hidden');
+        commandInput.value = '';
+        helpIndex = -1;
+      } else if (command === 'toss coin') {        // Show coin toss modal
         tossCoin();
         commandLine.classList.add('hidden');
         helpBubble.classList.add('hidden');
