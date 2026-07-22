@@ -90,8 +90,8 @@ function initGame(){
   state = 'playing';
 
   buildScene();
-  winEl.classList.add('hidden');
-  hudEl.classList.remove('hidden');
+  winEl.style.display='none';
+  hudEl.style.display='block';
 }
 
 // ─── Build Three.js Scene ─────────────────────────────────────────────────────
@@ -424,61 +424,61 @@ function drawMap(){
 function showWin(p){
   cancelAnimationFrame(animFrame);
   winEl.innerHTML=`
-    <div class="text-center">
-      <div class="text-6xl mb-4">🏆</div>
-      <div class="text-3xl font-bold mb-2" style="color:#${p.color.toString(16).padStart(6,'0')}">${p.name} Wins!</div>
-      <div class="text-slate-400 mb-6">Reached the exit in ${((performance.now()-startTime)/1000).toFixed(1)}s</div>
-      <div class="flex gap-3 justify-center">
-        <button onclick="window.MazeDuel.restart()" class="px-6 py-2 bg-brand text-dark font-bold rounded-full hover:brightness-110">Play Again</button>
-        <button onclick="window.MazeDuel.close()" class="px-6 py-2 border border-slate-600 text-slate-300 rounded-full hover:border-white">Exit</button>
+    <div style="text-align:center;color:white;">
+      <div style="font-size:4rem;margin-bottom:16px;">🏆</div>
+      <div style="font-size:2rem;font-weight:700;margin-bottom:8px;color:#${p.color.toString(16).padStart(6,'0')}">${p.name} Wins!</div>
+      <div style="color:#94a3b8;margin-bottom:24px;">Reached the exit in ${((performance.now()-startTime)/1000).toFixed(1)}s</div>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button onclick="window.MazeDuel.restart()" style="padding:8px 24px;background:#38bdf8;color:#0f172a;font-weight:700;border:none;border-radius:999px;cursor:pointer;">Play Again</button>
+        <button onclick="window.MazeDuel.close()" style="padding:8px 24px;background:transparent;color:#cbd5e1;border:1px solid #475569;border-radius:999px;cursor:pointer;">Exit</button>
       </div>
     </div>`;
-  winEl.classList.remove('hidden');
-  hudEl.classList.add('hidden');
+  winEl.style.display='flex';
+  winEl.style.alignItems='center';
+  winEl.style.justifyContent='center';
+  hudEl.style.display='none';
 }
 
 // ─── Setup Screen ─────────────────────────────────────────────────────────────
 function buildSetupScreen(){
   return `
-  <div class="flex flex-col items-center gap-6 p-8 max-w-lg w-full mx-auto">
-    <div class="text-center">
-      <div class="text-4xl mb-1">🧩</div>
-      <h1 class="text-2xl font-bold text-white">3D Maze Duel</h1>
-      <p class="text-slate-400 text-sm mt-1">Split-screen first-person maze race</p>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:24px;padding:32px;max-width:480px;width:100%;margin:0 auto;">
+    <div style="text-align:center;">
+      <div style="font-size:2.5rem;margin-bottom:4px;">🧩</div>
+      <h1 style="color:#fff;font-size:1.5rem;font-weight:700;margin:0;">3D Maze Duel</h1>
+      <p style="color:#94a3b8;font-size:0.875rem;margin:4px 0 0;">Split-screen first-person maze race</p>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 w-full">
-      <!-- P1 -->
-      <div class="bg-slate-800 border border-sky-500/40 rounded-xl p-4">
-        <div class="text-sky-400 font-bold mb-3">Player 1 <span class="text-xs text-slate-500">(WASD+QE)</span></div>
-        <input id="p1name" value="Player 1" class="w-full bg-slate-700 text-white text-sm px-3 py-1.5 rounded mb-3 outline-none focus:ring-1 focus:ring-sky-400"/>
-        <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer mb-2">
-          <input type="checkbox" id="p1cpu" class="accent-sky-400"/> CPU
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;">
+      <div style="background:#1e293b;border:1px solid rgba(56,189,248,0.3);border-radius:12px;padding:16px;">
+        <div style="color:#38bdf8;font-weight:700;margin-bottom:12px;">Player 1 <span style="color:#64748b;font-size:0.75rem;">(WASD+QE)</span></div>
+        <input id="p1name" value="Player 1" style="width:100%;background:#334155;color:#fff;font-size:0.875rem;padding:6px 12px;border-radius:6px;border:none;outline:none;margin-bottom:12px;box-sizing:border-box;"/>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.875rem;color:#cbd5e1;cursor:pointer;margin-bottom:8px;">
+          <input type="checkbox" id="p1cpu"/> CPU
         </label>
-        <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer" id="p1smartrow">
-          <input type="checkbox" id="p1smart" checked class="accent-sky-400"/> Smart AI
+        <label id="p1smartrow" style="display:flex;align-items:center;gap:8px;font-size:0.875rem;color:#cbd5e1;cursor:pointer;opacity:0.3;">
+          <input type="checkbox" id="p1smart" checked/> Smart AI
         </label>
       </div>
-      <!-- P2 -->
-      <div class="bg-slate-800 border border-yellow-500/40 rounded-xl p-4">
-        <div class="text-yellow-400 font-bold mb-3">Player 2 <span class="text-xs text-slate-500">(Numpad)</span></div>
-        <input id="p2name" value="Player 2" class="w-full bg-slate-700 text-white text-sm px-3 py-1.5 rounded mb-3 outline-none focus:ring-1 focus:ring-yellow-400"/>
-        <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer mb-2">
-          <input type="checkbox" id="p2cpu" class="accent-yellow-400"/> CPU
+      <div style="background:#1e293b;border:1px solid rgba(250,204,21,0.3);border-radius:12px;padding:16px;">
+        <div style="color:#facc15;font-weight:700;margin-bottom:12px;">Player 2 <span style="color:#64748b;font-size:0.75rem;">(Numpad)</span></div>
+        <input id="p2name" value="Player 2" style="width:100%;background:#334155;color:#fff;font-size:0.875rem;padding:6px 12px;border-radius:6px;border:none;outline:none;margin-bottom:12px;box-sizing:border-box;"/>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.875rem;color:#cbd5e1;cursor:pointer;margin-bottom:8px;">
+          <input type="checkbox" id="p2cpu"/> CPU
         </label>
-        <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer" id="p2smartrow">
-          <input type="checkbox" id="p2smart" checked class="accent-yellow-400"/> Smart AI
+        <label id="p2smartrow" style="display:flex;align-items:center;gap:8px;font-size:0.875rem;color:#cbd5e1;cursor:pointer;opacity:0.3;">
+          <input type="checkbox" id="p2smart" checked/> Smart AI
         </label>
       </div>
     </div>
 
-    <div class="text-xs text-slate-500 text-center">
-      🎯 Race to the <span class="text-green-400">green gem</span> in the center · Press <kbd class="bg-slate-700 px-1 rounded">M</kbd> for minimap
+    <div style="color:#64748b;font-size:0.75rem;text-align:center;">
+      🎯 Race to the <span style="color:#4ade80;">green gem</span> in the center · Press <kbd style="background:#334155;padding:1px 6px;border-radius:4px;color:#cbd5e1;">M</kbd> for minimap
     </div>
 
-    <div class="flex gap-3">
-      <button id="mazeStart" class="px-8 py-2.5 bg-brand text-dark font-bold rounded-full hover:brightness-110 transition">Start Game</button>
-      <button id="mazeClose" class="px-6 py-2.5 border border-slate-600 text-slate-300 rounded-full hover:border-white transition">Exit</button>
+    <div style="display:flex;gap:12px;">
+      <button id="mazeStart" style="padding:10px 32px;background:#38bdf8;color:#0f172a;font-weight:700;border:none;border-radius:999px;cursor:pointer;font-size:0.875rem;">Start Game</button>
+      <button id="mazeClose" style="padding:10px 24px;background:transparent;color:#94a3b8;border:1px solid #475569;border-radius:999px;cursor:pointer;font-size:0.875rem;">Exit</button>
     </div>
   </div>`;
 }
@@ -527,8 +527,7 @@ function buildUI(){
   // HUD
   hudEl = document.createElement('div');
   hudEl.id = 'mazeHud';
-  hudEl.className = 'hidden';
-  hudEl.style.cssText = 'position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:10;';
+  hudEl.style.cssText = 'position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:10;display:none;';
   timerEl = document.createElement('div');
   timerEl.style.cssText = 'background:rgba(0,0,0,0.6);color:white;padding:2px 12px;border-radius:99px;font-size:13px;font-weight:600;';
   hudEl.appendChild(timerEl);
@@ -550,8 +549,7 @@ function buildUI(){
 
   // Win overlay
   winEl = document.createElement('div');
-  winEl.className = 'hidden';
-  winEl.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);z-index:30;color:white;';
+  winEl.style.cssText = 'position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);z-index:30;color:white;';
   modal.appendChild(winEl);
 
   document.body.appendChild(modal);
@@ -618,7 +616,6 @@ function launch(){
 
 function restart(){
   cancelAnimationFrame(animFrame);
-  // Reset renderer
   if(renderer3){ renderer3.dispose(); renderer3=null; }
   const setupEl=document.getElementById('mazeSetup');
   canvas3d.style.display='none';
@@ -627,8 +624,8 @@ function restart(){
   document.getElementById('p1label').style.display='none';
   document.getElementById('p2label').style.display='none';
   setupEl.style.display='flex';
-  winEl.classList.add('hidden');
-  hudEl.classList.remove('hidden');
+  winEl.style.display='none';
+  hudEl.style.display='none';
   mapCanvas.style.display='none';
   document.removeEventListener('keydown',onKey);
   document.removeEventListener('keyup',onKey);
