@@ -787,14 +787,23 @@ function initCommandLine() {
         commandInput.value = '';
         helpIndex = -1;
       } else if (command === '3dmazeduel') {
-        if(window.MazeDuel) {
+        console.log('[CMD] 3dmazeduel triggered, window.MazeDuel=', window.MazeDuel);
+        const launchGame = () => {
+          console.log('[CMD] launching game...');
           window.MazeDuel.launch();
+        };
+        if(window.MazeDuel) {
+          launchGame();
         } else {
-          // Script not loaded yet — load it dynamically
-          const s = document.createElement('script');
-          s.src = '3dmazeduel.js';
-          s.onload = () => { if(window.MazeDuel) window.MazeDuel.launch(); };
-          document.head.appendChild(s);
+          console.warn('[CMD] MazeDuel not found, loading script dynamically...');
+          const existing = document.querySelector('script[src="3dmazeduel.js"]');
+          if(!existing) {
+            const s = document.createElement('script');
+            s.src = '3dmazeduel.js';
+            s.onload = () => { console.log('[CMD] script loaded dynamically'); launchGame(); };
+            s.onerror = (e) => console.error('[CMD] script load failed', e);
+            document.head.appendChild(s);
+          }
         }
         commandLine.classList.add('hidden');
         helpBubble.classList.add('hidden');
