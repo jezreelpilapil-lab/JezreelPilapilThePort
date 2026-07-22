@@ -787,7 +787,15 @@ function initCommandLine() {
         commandInput.value = '';
         helpIndex = -1;
       } else if (command === '3dmazeduel') {
-        if(window.MazeDuel) window.MazeDuel.launch();
+        if(window.MazeDuel) {
+          window.MazeDuel.launch();
+        } else {
+          // Script not loaded yet — load it dynamically
+          const s = document.createElement('script');
+          s.src = '3dmazeduel.js';
+          s.onload = () => { if(window.MazeDuel) window.MazeDuel.launch(); };
+          document.head.appendChild(s);
+        }
         commandLine.classList.add('hidden');
         helpBubble.classList.add('hidden');
         helpBubble.classList.remove('flex');

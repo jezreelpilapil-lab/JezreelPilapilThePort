@@ -649,3 +649,4 @@ return { launch, restart, close };
 })();
 
 window.MazeDuel = MazeDuel;
+console.log('[3DMazeDuel] loaded and ready');
