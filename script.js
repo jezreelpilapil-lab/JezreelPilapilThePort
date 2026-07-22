@@ -687,6 +687,9 @@ function initCommandLine() {
   commandInput.addEventListener('keydown', async (e) => {
     const elements = helpCommandElements();
     const isHelpVisible = !helpBubble.classList.contains('hidden');
+    if (e.key === 'Enter') {
+      console.log('[CMD] Enter pressed, value:', commandInput.value, 'isHelpVisible:', isHelpVisible, 'helpIndex:', helpIndex);
+    }
 
     if (isHelpVisible && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
       e.preventDefault();
