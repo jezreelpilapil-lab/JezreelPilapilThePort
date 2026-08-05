@@ -233,28 +233,52 @@
   ],
   "certifications": [
     {
-      "name": "Call Center Training",
+      "name": "Finishing Course for Call Center Agent NC II",
+      "school": "WinSource Solutions",
+      "location": "Robinson's Cybergate Tower 1, Mandaluyong City",
+      "year": "2009"
+    },
+    {
+      "name": "Call Center Training Program",
       "school": "Informatics Computer Institute",
+      "location": "Karuhatan, Valenzuela City",
+      "year": "2009"
+    },
+    {
+      "name": "Consumer Electronics Servicing NC II",
+      "school": "St. Peter Velle Technical Training Center",
       "location": "Valenzuela City",
+      "year": "2009"
+    },
+    {
+      "name": "Career Opportunity Plan, PCTC, SAMS, IES, Business Conduct",
+      "school": "Philam Life",
+      "location": "Aurora Boulevard, Quezon City",
       "year": "2008"
     },
     {
-      "name": "Optic Fiber Technology",
+      "name": "Credit Card Analog Training",
+      "school": "Citibank National Association",
+      "location": "Marulas, Valenzuela City",
+      "year": "2008"
+    },
+    {
+      "name": "Fiber Optic Technology",
       "school": "Telecommunications Training Institute",
-      "location": "Valenzuela City",
+      "location": "Karuhatan, Valenzuela City",
       "year": "2007"
     },
     {
       "name": "Microcomputer Hardware Servicing",
       "school": "Telecommunications Training Institute",
-      "location": "Valenzuela City",
+      "location": "Karuhatan, Valenzuela City",
       "year": "2002"
     },
     {
       "name": "Computer Programming",
       "school": "Salvador Araneta Memorial Institute",
       "location": "Malabon City",
-      "year": "2001"
+      "year": "1999-2001"
     }
   ],
   "contact": {
