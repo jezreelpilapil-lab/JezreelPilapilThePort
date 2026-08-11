@@ -70,6 +70,14 @@ function buildNav(meta) {
           ${links.map(l => `<a href="#${l.toLowerCase()}" class="text-slate-700 dark:text-slate-300 hover:text-brand transition-colors">${l}</a>`).join('')}
         </nav>
         <div class="flex gap-2">
+          <a href="${meta.curriculum_vitae}" download
+             class="text-xs bg-green-600 text-white font-semibold px-3 py-2 rounded-full hover:bg-green-700 transition">
+            Download CV
+          </a>
+          <a href="${meta.curriculum_vitae}" target="_blank"
+             class="text-xs border border-green-600 text-green-600 dark:text-green-500 font-semibold px-3 py-2 rounded-full hover:bg-green-600 hover:text-white transition">
+            View CV
+          </a>
           <a href="${meta.resume}" download
              class="text-xs bg-brand text-dark font-semibold px-3 py-2 rounded-full hover:brightness-110 transition">
             Full Resume
@@ -132,6 +140,14 @@ function buildHero(meta) {
           <a href="#projects"
              class="border border-brand text-brand px-6 py-3 rounded-full hover:bg-brand hover:text-dark transition">
             View Projects
+          </a>
+          <a href="${meta.curriculum_vitae}" download
+             class="bg-green-600 text-white font-semibold px-6 py-3 rounded-full hover:bg-green-700 transition">
+            Download CV
+          </a>
+          <a href="${meta.curriculum_vitae}" target="_blank"
+             class="border border-green-600 text-green-600 dark:text-green-500 font-semibold px-6 py-3 rounded-full hover:bg-green-600 hover:text-white transition">
+            View CV
           </a>
           <a href="${meta.resume}" download
              class="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white font-semibold px-6 py-3 rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 transition">
