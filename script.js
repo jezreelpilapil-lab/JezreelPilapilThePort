@@ -54,8 +54,8 @@ function buildNav(meta) {
   const links = ['About', 'Skills', 'Experience', 'Projects', 'Awards', 'Certifications', 'Contact'];
   document.getElementById('navbar').innerHTML = `
     <header class="fixed top-0 inset-x-0 z-50 bg-white/90 dark:bg-dark/90 backdrop-blur border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
-      <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-        <div class="flex items-center gap-3">
+      <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3 flex-shrink-0">
           <img src="logo.png" alt="JAP Logo" class="w-8 h-8 rounded-full object-cover">
           <button id="darkModeToggle" class="p-2 rounded-full border border-slate-300 dark:border-slate-700 hover:border-brand transition-colors">
             <svg id="sunIcon" class="w-5 h-5 text-yellow-500 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -66,25 +66,25 @@ function buildNav(meta) {
             </svg>
           </button>
         </div>
-        <nav class="hidden md:flex gap-6 text-sm font-medium">
-          ${links.map(l => `<a href="#${l.toLowerCase()}" class="text-slate-700 dark:text-slate-300 hover:text-brand transition-colors">${l}</a>`).join('')}
+        <nav class="hidden lg:flex gap-4 text-sm font-medium flex-1 justify-center">
+          ${links.map(l => `<a href="#${l.toLowerCase()}" class="text-slate-700 dark:text-slate-300 hover:text-brand transition-colors whitespace-nowrap">${l}</a>`).join('')}
         </nav>
-        <div class="flex gap-2">
+        <div class="hidden lg:flex gap-2 flex-shrink-0">
           <a href="${meta.curriculum_vitae}" download
-             class="text-xs bg-green-600 text-white font-semibold px-3 py-2 rounded-full hover:bg-green-700 transition">
-            Download CV
+             class="text-xs bg-green-600 text-white font-semibold px-3 py-2 rounded-full hover:bg-green-700 transition whitespace-nowrap">
+            CV
           </a>
           <a href="${meta.resume}" download
-             class="text-xs bg-brand text-dark font-semibold px-3 py-2 rounded-full hover:brightness-110 transition">
-            Full Resume
+             class="text-xs bg-brand text-dark font-semibold px-3 py-2 rounded-full hover:brightness-110 transition whitespace-nowrap">
+            Full
           </a>
           <a href="${meta.resume_short}" download
-             class="text-xs border border-brand text-brand font-semibold px-3 py-2 rounded-full hover:bg-brand hover:text-dark transition">
-            Short Resume
+             class="text-xs border border-brand text-brand font-semibold px-3 py-2 rounded-full hover:bg-brand hover:text-dark transition whitespace-nowrap">
+            Short
           </a>
           <a href="${meta.resume_compact}" download
-             class="text-xs border border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-semibold px-3 py-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition">
-            Compact Resume
+             class="text-xs border border-slate-400 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-semibold px-3 py-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition whitespace-nowrap">
+            Compact
           </a>
         </div>
       </div>
