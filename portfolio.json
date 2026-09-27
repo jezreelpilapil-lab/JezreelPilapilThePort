@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "Jezreel Aldave Pilapil",
-    "tagline": "IT Technical Support · Quality Assurance · BPO Operations · Software & Hardware Engineer",
+    "tagline": "Virtual Assistant · IT Technical Support · Quality Assurance · BPO Operations · Software & Hardware Engineer",
     "location": "Malolos City, Bulacan, Philippines",
     "phone": "+63 992.783.0102",
     "email": "jezreel.pilapil@gmail.com",
@@ -23,6 +23,11 @@
     ]
   },
   "skills": [
+    {
+      "category": "Virtual Assistant & Admin",
+      "icon": "briefcase",
+      "items": ["Email management", "Calendar scheduling", "Data entry & organization", "Customer communication", "Document preparation", "Remote team coordination", "CRM management", "Report generation", "Task prioritization", "Multi-account administration"]
+    },
     {
       "category": "Languages & Web",
       "icon": "code",
