@@ -291,25 +291,6 @@
     "formspree": "https://formspree.io/f/mjgngqew",
     "cta": "Available for remote VA, technical support, helpdesk, and freelance dev engagements. Let's connect."
   },
-  "hidden_ui": {
-    "hidden_icon": {
-      "id": "hiddenIcon",
-      "class": "fixed bottom-4 left-4 text-slate-700 hover:text-slate-500 cursor-pointer text-2xl opacity-0 transition-opacity",
-      "content": "🔒"
-    },
-    "command_line": {
-      "id": "commandLine",
-      "class": "fixed bottom-4 left-4 bg-slate-800 border border-slate-700 rounded-lg p-3 hidden flex gap-2 items-center shadow-lg",
-      "input_id": "commandInput",
-      "input_class": "bg-transparent border-none outline-none text-white w-64",
-      "input_placeholder": "Type command..."
-    },
-    "error_bubble": {
-      "id": "errorBubble",
-      "class": "fixed bottom-20 left-4 bg-red-500/90 text-white px-4 py-2 rounded-lg shadow-lg hidden",
-      "message": "Bad or unknown command"
-    }
-  },
   "supabase": {
     "url": "https://yobczuepdtlenjgvwdqy.supabase.co",
     "anon_key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlvYmN6dWVwZHRsZW5qZ3Z3ZHF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1MjEyMjEsImV4cCI6MjEwMDA5NzIyMX0.OQivQw3E5-wHcYmD87VtZsCRItaluJNI9LLhVk6c5W8"
